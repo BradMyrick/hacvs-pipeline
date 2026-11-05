@@ -17,6 +17,12 @@ import re
 import sys
 from pathlib import Path
 
+def type_str(type_name: dict) -> str:
+    """solc AST type: typeDescriptions.typeString (0.8.x) with description fallback."""
+    td = (type_name or {}).get("typeDescriptions", {}) or {}
+    return td.get("typeString") or (type_name or {}).get("description") or ""
+
+
 CATEGORIES = {
     "ownership": re.compile(r"owner|admin|role|authority|guardian|operator|signer|auth|access", re.I),
     "fees": re.compile(r"fee|rate|bps|premium|spread|reward", re.I),
@@ -99,7 +105,7 @@ class Audit:
             if t == "VariableDeclaration" and not node.get("isParameter"):
                 info = {
                     "name": node.get("name", ""),
-                    "type": (node.get("typeName", {}) or {}).get("description", ""),
+                    "type": type_str(node.get("typeName")),
                     "categories": classify(node.get("name", "")),
                     "constant": node.get("constant", False),
                 }
@@ -108,7 +114,7 @@ class Audit:
                     self.state_vars_by_name.setdefault(info["name"], info)
             elif t == "EventDefinition":
                 params = [
-                    {"name": p.get("name", ""), "type": (p.get("typeName", {}) or {}).get("description", ""),
+                    {"name": p.get("name", ""), "type": type_str(p.get("typeName")),
                      "indexed": bool(p.get("indexed"))}
                     for p in node.get("parameters", {}).get("parameters", [])
                 ]

@@ -23,6 +23,12 @@ import re
 import sys
 from pathlib import Path
 
+def type_str(type_name: dict) -> str:
+    """solc AST type: typeDescriptions.typeString (0.8.x) with description fallback."""
+    td = (type_name or {}).get("typeDescriptions", {}) or {}
+    return td.get("typeString") or (type_name or {}).get("description") or ""
+
+
 AUTH_PATTERNS = [
     (re.compile(r"onlyowner|onlyadmin|_?auth(?:orize)?$", re.I), "OWNER"),
     (re.compile(r"onlyrole|hasrole|requiresrole|role\b", re.I), "ROLE"),
@@ -86,7 +92,7 @@ def extract(build_info_dir: Path) -> list[dict]:
                             mods.append({"name": name, "arg": arg})
                     mod_names = " ".join(m["name"].lower() for m in mods)
                     params = [
-                        ((p.get("typeName", {}) or {}).get("description", "") or "?")
+                        (type_str(p.get("typeName")) or "?")
                         for p in (fn.get("parameters", {}) or {}).get("parameters", [])
                     ]
                     state_changing = fn.get("stateMutability", "nonpayable") not in ("view", "pure")
