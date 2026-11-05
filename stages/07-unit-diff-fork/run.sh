@@ -71,12 +71,19 @@ for line in lcov.read_text().splitlines():
             if key in ("LH",): lh += val
             if key in ("BRF",): brf += val
             if key in ("BRH",): brh += val
-line_pct = round(100.0 * lh / lf, 2) if lf else 0.0
-branch_pct = round(100.0 * brh / brf, 2) if brf else 0.0
+# Spec gate measures PROTOCOL SOURCE: src/** excluding test scaffolding
+# (src/mocks/) and deploy scripts. Everything else is informational.
+proto = {k: v for k, v in per_file.items()
+         if k.startswith("src/") and "/mocks/" not in k}
+plf = sum(v["LF"] for v in proto.values()); plh = sum(v["LH"] for v in proto.values())
+pbrf = sum(v["BRF"] for v in proto.values()); pbrh = sum(v["BRH"] for v in proto.values())
+line_pct = round(100.0 * plh / plf, 2) if plf else 0.0
+branch_pct = round(100.0 * pbrh / pbrf, 2) if pbrf else 0.0
 summary = {
+    "scope": "src/** excluding src/mocks (protocol source only)",
     "line_pct": line_pct, "branch_pct": branch_pct,
-    "line_hit": lh, "line_found": lf,
-    "branch_hit": brh, "branch_found": brf,
+    "line_hit": plh, "line_found": plf,
+    "branch_hit": pbrh, "branch_found": pbrf,
     "thresholds": {"line": 95.0, "branch": 95.0},
     "below_threshold": line_pct < 95.0 or branch_pct < 95.0,
     "per_file": {k: v for k, v in per_file.items() if v["LF"] > 0},
