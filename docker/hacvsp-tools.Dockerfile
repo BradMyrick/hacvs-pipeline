@@ -138,7 +138,7 @@ RUN set -eux; \
     else echo "!! WARN: medusa UNPINNED — run make pin"; fi; \
     tar -xzf /tmp/medusa.tar.gz -C /tmp; \
     install -m 0755 /tmp/medusa /usr/local/bin/medusa; \
-    medusa version
+    medusa --help > /dev/null
 
 # Cosign
 RUN set -eux; \
