@@ -24,3 +24,11 @@ Oracle latency/staleness simulation, flash-loan callbacks under real pool states
 
 ## Gate evaluation
 `gate.py` requires: coverage summary present, thresholds met (or signed exceptions file), no failed suites detected in results.
+
+## Known toolchain interaction: via_ir + vm.warp (2026-11-05, PeekPeak)
+
+solc's Yul optimizer rematerializes `block.timestamp` at use sites — valid for
+real transactions (timestamp is tx-stable), invalid across `vm.warp`. A test
+that captures `uint256 t0 = block.timestamp;` and reads `t0` after a warp gets
+the POST-warp value under `via_ir = true`. Contracts' emitted/storage behavior
+is unaffected. Rule: in tests, capture time with `vm.getBlockTimestamp()`.
