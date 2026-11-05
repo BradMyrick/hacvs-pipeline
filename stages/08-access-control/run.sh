@@ -15,11 +15,20 @@ cd "$TARGET" || { fail "target/ missing"; exit 1; }
 forge build --build-info --force || fail "forge build failed"
 
 note "extracting access matrix from ASTs"
+# The harness is GENERATED ONCE, then operator-owned (wired imports/setUp).
+# Regenerating would overwrite the wiring — never clobber an existing file.
+if [ -f "$TARGET/test/access-control/GeneratedAccessMatrix.t.sol" ]; then
+  note "harness already present (operator-wired) — regenerating matrix only"
+  HARNESS_ARGS=""
+else
+  mkdir -p "$TARGET/test/access-control"
+  HARNESS_ARGS="--harness $TARGET/test/access-control/GeneratedAccessMatrix.t.sol"
+fi
 python3 /pipeline/tools/access-matrix/access_matrix.py \
   --build-info "$TARGET/out/build-info" \
   --out-json "$ART/ACCESS_CONTROL_MATRIX.json" \
   --out-md "$ART/ACCESS_CONTROL_MATRIX.md" \
-  --harness "$TARGET/test/access-control/GeneratedAccessMatrix.t.sol" \
+  $HARNESS_ARGS \
   || fail "access matrix extraction failed"
 
 note "running access-control assertion suite (declared + generated + manual)"
