@@ -205,7 +205,11 @@ class Audit:
                 if not writes:
                     continue
                 cgraph[fn.get("name", "?")] = entry
-                if critical and not emits:
+                # Spec scope: ON-CHAIN contracts (src/**). Scripts/tests are
+                # compiled into the same build-info but never ship — report
+                # informationally only.
+                on_chain = contract["source"].startswith("src/") or "/src/" in contract["source"]
+                if critical and not emits and on_chain:
                     missing.append({
                         "contract": contract["name"], "source": contract["source"],
                         "function": fn.get("name") or "constructor",
@@ -213,11 +217,13 @@ class Audit:
                         "categories": sorted({c for v in critical
                                               for c in (self.state_vars_by_name.get(v, {}).get("categories") or [])}),
                     })
+                elif critical and not on_chain and emits == []:
+                    pass  # off-chain fixture gap — recorded in mutation_graph only
                 elif critical:
                     for ev in emits:
                         ev = (ev or "").strip()
                         for params in self.events.get(ev, []):
-                            if not self._event_has_indexed_identity(params):
+                            if not self._event_has_indexed_identity(params) and on_chain:
                                 warnings.append({
                                     "contract": contract["name"], "function": fn.get("name") or "constructor",
                                     "event": ev,
