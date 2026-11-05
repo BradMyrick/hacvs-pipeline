@@ -68,7 +68,11 @@ def extract(build_info_dir: Path) -> list[dict]:
         for src, payload in (data.get("output", {}).get("sources") or {}).items():
             ast = payload.get("ast", {}) or {}
             for node in ast.get("nodes", []):
-                if node.get("nodeType") != "ContractDefinition" or node.get("kind") != "contract":
+                # solc 0.8.38 build-info ASTs may omit ContractDefinition.kind —
+                # default to "contract" (interfaces/libraries still labeled).
+                if node.get("nodeType") != "ContractDefinition":
+                    continue
+                if (node.get("kind") or "contract") != "contract":
                     continue
                 cname = node.get("name", "?")
                 for fn in node.get("nodes", []):
