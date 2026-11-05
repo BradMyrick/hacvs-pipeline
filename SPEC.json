@@ -1,0 +1,688 @@
+{
+  "pipeline_name": "Kodr.pro High-Assurance Contract Verification & Security Pipeline",
+  "version": "v0.1.0",
+  "target_runtime": "EVM",
+  "execution_model": "Fail-Closed Gated Pipeline with Dual-Cadence Tiers, Binary Gate Verdicts, and Expert-in-the-Loop Attestation",
+  "official_description": "Kodr.pro High-Assurance Contract Verification & Security Pipeline (v0.1.0) is a fail-closed, dual-cadence verification system for EVM smart contracts. It enforces hermetic, fully pinned builds (Docker digest-pinned toolchain) and runs every stage under a binary GO/NO-GO gate. On every pull request it performs supply-chain and SBOM checks, deterministic compilation with bytecode size limits, static analysis with governed suppressions, event-emission and indexing verification, storage-layout and upgrade-safety analysis (including Diamond/ERC-2535), ERC standard conformance, and unit, differential, and mainnet-fork testing at >=95% coverage. On the release gate it adds an exhaustive access-control matrix, mutation testing (>=90% kill rate), multi-engine stateful fuzzing with cross-contract reentrancy handlers, source- and bytecode-level symbolic execution with dual bounded model checking (solc SMTChecker and Halmos), EVM-level formal theorem proving via Kontrol (KEVM/K Framework) with coverage-enforced non-vacuity, and a signed expert threat-model and specification review. The final stage cryptographically attests the entire evidence bundle.",
+  "capabilities": "Reproducible builds, dependency hygiene, comprehensive static and dynamic analysis, formal verification of specified properties (bounded model checking and EVM-level theorem proving), upgrade and access-control safety, standards compliance, and cryptographically signed provenance.",
+  "security_level": "Among the strongest practical pre-deployment assurance processes currently achievable with open tooling. It provides high confidence that the code matches its stated invariants, access controls, and specifications, subject to the completeness of those specifications and the quality of the expert review. It does not eliminate residual risk from incomplete threat models or novel economic attacks.",
+  "cadences": {
+    "pr_commit_tier": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "release_gate_tier": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14
+    ]
+  },
+  "toolchain_environment": {
+    "hermetic_runtime": "Pinned Docker image digests. All stages execute inside containers whose base images and tool artifacts are digest/sha256-pinned in docker/pins.env; hacvsp doctor verifies every pin fail-closed before any stage is permitted to run.",
+    "pinned_tool_versions": {
+      "solc": "0.8.38",
+      "foundry": "v1.9.0",
+      "slither": "0.11.6",
+      "aderyn": "0.6.8",
+      "echidna": "2.4.0",
+      "medusa": "1.5.1",
+      "mythril": "0.24.8",
+      "halmos": "0.3.3",
+      "kontrol": "runtimeverificationinc/kontrol:ubuntu-jammy-1.0.255 (digest-pinned, docker/pins.env)",
+      "scribble": "0.7.10",
+      "gambit": "1.0.6",
+      "cosign": "3.1.4",
+      "syft": "1.57.0",
+      "trivy": "0.76.2",
+      "aiwrangler_mcp": {
+        "version": "0.1.5",
+        "runtime": "MCP server (@kodr/aiwrangler), invoked by the pipeline agent over the Model Context Protocol; not a CLI. Used for AST diff triage, gate verification assistance, and human-review acknowledgement of suppression-ratification findings."
+      }
+    }
+  },
+  "stages": [
+    {
+      "order": 1,
+      "stage": "dependency_hygiene_and_supply_chain_verification",
+      "cadence": "pr_commit_tier",
+      "objective": "Audit external dependencies, generate CycloneDX/SPDX SBOM, enforce cryptographic tag verification, and freeze immutable git submodules.",
+      "software": [
+        {
+          "name": "Syft / Trivy",
+          "runtime": "Binary CLI (pinned version)",
+          "purpose": "Generate and scan CycloneDX/SPDX SBOM for smart contract submodules, npm packages, and compiler binaries."
+        },
+        {
+          "name": "cargo-audit / npm audit / git",
+          "runtime": "CLI",
+          "purpose": "Enforce exact commit-pinned git submodules or locked package digests (reject floating SemVer)."
+        }
+      ],
+      "requirements": {
+        "dependency_policy": "All external dependencies must be pinned to explicit release commit hashes with verified cryptographic tags; zero untracked dependencies.",
+        "artifacts_output": [
+          "artifacts/sbom.cyclonedx.json",
+          "artifacts/dependency-checksums.sha256"
+        ]
+      },
+      "gate": {
+        "decision": "GO_NO_GO",
+        "criteria": "Zero unreviewed CVEs in third-party libraries; all submodules pinned to immutable commit hashes."
+      }
+    },
+    {
+      "order": 2,
+      "stage": "deterministic_build_and_bytecode_size_validation",
+      "cadence": "pr_commit_tier",
+      "objective": "Produce byte-for-byte reproducible build artifacts, lock compiler flags, and validate EVM runtime bytecode and initcode boundaries.",
+      "software": [
+        {
+          "name": "Foundry",
+          "components": [
+            "forge build",
+            "forge --build-info"
+          ],
+          "version_constraint": "pinned in foundry.toml and docker/pins.env"
+        },
+        {
+          "name": "solc",
+          "version_constraint": "0.8.38 exact pragma lock"
+        },
+        {
+          "name": "Docker",
+          "components": [
+            "buildx"
+          ],
+          "version_constraint": "Hermetic container runtime (digest-pinned)"
+        }
+      ],
+      "requirements": {
+        "compiler_settings": {
+          "via_ir": true,
+          "optimizer_runs": 200,
+          "metadata_hash": "ipfs"
+        },
+        "limits": {
+          "max_runtime_bytecode_size_bytes": 24576,
+          "max_initcode_size_bytes": 49152,
+          "standard_references": [
+            "EIP-170",
+            "EIP-3860"
+          ]
+        },
+        "artifacts_output": [
+          "out/build-info/*.json",
+          "artifacts/canonical-ast.json",
+          "artifacts/reproducible-manifest.sha256",
+          "artifacts/bytecode-sizes.json"
+        ]
+      },
+      "gate": {
+        "decision": "GO_NO_GO",
+        "criteria": "Bytecode matches bit-for-bit in clean hermetic container; zero contracts violate EIP-170 or EIP-3860 size boundaries."
+      }
+    },
+    {
+      "order": 3,
+      "stage": "spec_linting_and_static_analysis",
+      "cadence": "pr_commit_tier",
+      "objective": "Execute static analysis, detect unbounded loops/gas griefing, parse specification annotations, and enforce suppression governance.",
+      "software": [
+        {
+          "name": "Scribble",
+          "runtime": "Node CLI (pinned)",
+          "purpose": "Parse and validate inline specification annotations (invariants, pre/post conditions, ghost variables)."
+        },
+        {
+          "name": "Slither",
+          "runtime": "Python 3.11 (pinned)",
+          "flags": [
+            "--json",
+            "slither-report.json",
+            "--checklist"
+          ]
+        },
+        {
+          "name": "Aderyn",
+          "runtime": "Rust binary (pinned)",
+          "flags": [
+            "--output",
+            "aderyn-report.sarif"
+          ]
+        },
+        {
+          "name": "SARIF Aggregator",
+          "runtime": "Custom stdlib-Python tool (tools/sarif-aggregator)",
+          "purpose": "Normalize findings and enforce strict suppression gating against .security-suppressions.json."
+        }
+      ],
+      "requirements": {
+        "analysis_targets": [
+          "Unbounded loops and external-call DoS vectors",
+          "Unprotected state changes and reentrancy paths",
+          "Arbitrary send / delegatecall exposure"
+        ],
+        "suppression_policy": "Every suppressed finding must specify finding_id, file, line_range, git_commit_hash, justification, and reviewer_signature in .security-suppressions.json.",
+        "pass_criteria": {
+          "unreviewed_critical": 0,
+          "unreviewed_high": 0,
+          "unreviewed_medium": 0
+        }
+      },
+      "gate": {
+        "decision": "GO_NO_GO",
+        "criteria": "Zero unsuppressed static warnings; 100% of suppression entries cryptographically signed and structurally valid."
+      }
+    },
+    {
+      "order": 4,
+      "stage": "event_completeness_and_indexing_verification",
+      "cadence": "pr_commit_tier",
+      "objective": "Verify that all critical state mutations emit strongly typed events with appropriate indexed topics for monitoring, subgraphs, and incident triage.",
+      "software": [
+        {
+          "name": "AiWrangler MCP",
+          "runtime": "MCP server (@kodr/aiwrangler 0.1.5), driven by the pipeline agent over MCP; not a CLI",
+          "purpose": "Triage AST state diffs and the extracted mutation graph, and acknowledge any human-severity findings raised during event-emission verification."
+        },
+        {
+          "name": "Event Audit Engine",
+          "runtime": "Custom stdlib-Python tool (tools/event-audit) over foundry build-info ASTs",
+          "components": [
+            "mutation-graph extractor",
+            "event-emission checker"
+          ],
+          "purpose": "Extract the state-mutation graph from the canonical AST and verify a matching event emission for every critical mutation."
+        },
+        {
+          "name": "Slither",
+          "components": [
+            "slither-check-erc",
+            "custom event detectors"
+          ],
+          "purpose": "Flag any public or external state-modifying function that updates storage variables without emitting a matching event."
+        }
+      ],
+      "requirements": {
+        "rules": [
+          "Every state variable mutation involving ownership, fee parameters, access rights, pause states, balances, or core protocol parameters must emit a dedicated event.",
+          "Indexed fields must include actor/caller address and target/asset identifiers (max 3 indexed topics per event per EVM specification).",
+          "Reentrancy guards and state updates must precede or immediately accompany event emission."
+        ],
+        "artifacts_output": [
+          "artifacts/EVENT_EMISSION_AUDIT.json"
+        ]
+      },
+      "gate": {
+        "decision": "GO_NO_GO",
+        "criteria": "Zero missing events on state-modifying functions; all primary entity identifiers correctly indexed."
+      }
+    },
+    {
+      "order": 5,
+      "stage": "storage_layout_and_upgradeability_verification",
+      "cadence": "pr_commit_tier",
+      "objective": "Verify storage slot preservation, proxy initialization safety, storage gaps, and Diamond (ERC-2535) facet/selector integrity.",
+      "software": [
+        {
+          "name": "OpenZeppelin Upgrades CLI / Foundry plugin",
+          "components": [
+            "validate-upgrade",
+            "check-storage-layout"
+          ],
+          "purpose": "Verify classic proxy storage layout preservation against baseline commits."
+        },
+        {
+          "name": "Foundry",
+          "components": [
+            "forge inspect <contract> storage-layout"
+          ],
+          "purpose": "Extract concrete storage slots, types, and offsets."
+        },
+        {
+          "name": "Layout Diff Engine",
+          "runtime": "Custom stdlib-Python tool (tools/layout-diff)",
+          "components": [
+            "slot/type collision detection",
+            "__gap integrity",
+            "Diamond ERC-7201 namespace check",
+            "selector collision check"
+          ],
+          "purpose": "Verify storage layout preservation against the baseline commit, storage gap arithmetic, Diamond storage namespace immutability, and absence of four-byte selector collisions across registered facets."
+        }
+      ],
+      "requirements": {
+        "applicable_architectures": [
+          "UUPS",
+          "TransparentUpgradeableProxy",
+          "BeaconProxy",
+          "Diamond / ERC-2535",
+          "non-upgradeable (baseline snapshot only)"
+        ],
+        "checks": [
+          "Zero alteration to slot assignment or types of pre-existing storage variables across updates",
+          "Storage gap integrity verified (__gap array size decreases strictly equal to added variables)",
+          "Constructors lock implementation logic (_disableInitializers() or equivalent in logic constructor)",
+          "Diamond storage namespace hashes collision-free and immutable",
+          "No four-byte function selector collisions across registered Diamond facets"
+        ]
+      },
+      "gate": {
+        "decision": "GO_NO_GO",
+        "criteria": "Zero storage collision warnings; formal confirmation of initializer protection and facet selector uniqueness."
+      }
+    },
+    {
+      "order": 6,
+      "stage": "standards_compliance_and_conformance_suite",
+      "cadence": "pr_commit_tier",
+      "objective": "Verify strict conformance to standard interface specifications and mathematical boundary constraints.",
+      "software": [
+        {
+          "name": "Foundry ERC Conformance Harness",
+          "components": [
+            "forge test --match-path test/compliance/*"
+          ],
+          "purpose": "Validate ERC-20, ERC-721, ERC-1155, and ERC-4626 conformance against canonical test suites."
+        },
+        {
+          "name": "ERC-4626 Property Test Suite (a16z / OpenZeppelin)",
+          "purpose": "Prove share-to-asset accounting rounding directions (round down on mint/deposit, round up on withdraw/redeem to protect pool solvency)."
+        }
+      ],
+      "requirements": {
+        "conformance_specs": [
+          "EIP-20 return values / safe transfers",
+          "EIP-165 supportsInterface mapping",
+          "EIP-4626 mathematical inflation attack immunity / slippage tolerances"
+        ]
+      },
+      "gate": {
+        "decision": "GO_NO_GO",
+        "criteria": "100% pass across all applicable reference standard compliance suites."
+      }
+    },
+    {
+      "order": 7,
+      "stage": "concrete_unit_differential_and_fork_testing",
+      "cadence": "pr_commit_tier",
+      "objective": "Validate concrete state transitions, differential math against reference implementations, gas limits, and real mainnet-fork environments.",
+      "software": [
+        {
+          "name": "Foundry",
+          "components": [
+            "forge test",
+            "forge coverage"
+          ],
+          "flags": [
+            "--gas-report",
+            "-vvvv",
+            "--summary"
+          ]
+        },
+        {
+          "name": "Differential Test Engine",
+          "components": [
+            "forge test --match-path test/differential/*"
+          ],
+          "purpose": "Execute side-by-side differential tests comparing contract state and math calculations against known-good reference implementations (e.g., Solady, OpenZeppelin, or canonical Python/Rust models)."
+        },
+        {
+          "name": "Anvil",
+          "components": [
+            "anvil --fork-url <RPC>"
+          ],
+          "purpose": "Local mainnet/testnet fork execution simulating live DEX liquidity, oracle staleness, and lending interactions."
+        }
+      ],
+      "requirements": {
+        "coverage_thresholds": {
+          "line_coverage_pct_minimum": 95.0,
+          "branch_coverage_pct_minimum": 95.0,
+          "exceptions_policy": "Any branch under 100% requires a documented justification in COVERAGE_EXCEPTIONS.md (e.g., unreachable compiler artifacts or defensive panic catches)."
+        },
+        "differential_testing_scope": [
+          "Math routines tested against reference math models across bounded input spaces",
+          "Token logic tested against standard reference implementations to detect state divergence"
+        ],
+        "fork_testing_scope": [
+          "External oracle latency and stale data simulation",
+          "Flash loan callback interaction under real pool states",
+          "Liquidity depth constraints and price impact limits"
+        ]
+      },
+      "gate": {
+        "decision": "GO_NO_GO",
+        "criteria": "All unit, differential, and fork tests pass; coverage meets >= 95% threshold with all gap justifications approved."
+      }
+    },
+    {
+      "order": 8,
+      "stage": "access_control_and_privilege_matrix_validation",
+      "cadence": "release_gate_tier",
+      "objective": "Generate and mathematically enforce an exhaustive Access Control Matrix mapping roles to external/public state transitions.",
+      "software": [
+        {
+          "name": "Access Matrix Extractor",
+          "runtime": "Custom stdlib-Python AST extractor (tools/access-matrix)",
+          "components": [
+            "entry-point enumeration",
+            "modifier/guard extraction",
+            "role classification"
+          ],
+          "purpose": "Extract all public/external entry points and their associated modifiers/guards into a structured graph."
+        },
+        {
+          "name": "Access Matrix Assertion Engine",
+          "runtime": "Foundry test harness (generated from the matrix)",
+          "components": [
+            "forge test --match-path test/access-control/*"
+          ],
+          "purpose": "Systematically exercise entry points using non-privileged addresses to prove authorization bounds and enforce 100% concordance between the declared matrix and executable tests."
+        }
+      ],
+      "requirements": {
+        "artifacts_output": [
+          "artifacts/ACCESS_CONTROL_MATRIX.json",
+          "artifacts/ACCESS_CONTROL_MATRIX.md"
+        ],
+        "matrix_schema": {
+          "fields": [
+            "contract",
+            "function_signature",
+            "allowed_roles",
+            "is_pausable",
+            "timelock_delay_seconds"
+          ]
+        }
+      },
+      "gate": {
+        "decision": "GO_NO_GO",
+        "criteria": "Zero unauthorized callers can execute privileged state-modifying functions; 100% concordance between declared matrix and executable tests."
+      }
+    },
+    {
+      "order": 9,
+      "stage": "mutation_testing",
+      "cadence": "release_gate_tier",
+      "objective": "Measure test suite assertion quality by injecting semantic mutations into the codebase and calculating kill rates.",
+      "software": [
+        {
+          "name": "Gambit",
+          "runtime": "Prebuilt release binary (sha256-pinned)",
+          "purpose": "Generate syntactic and semantic mutations (inverted booleans, altered math operators, bypassed requirements)."
+        },
+        {
+          "name": "Foundry Runner",
+          "components": [
+            "forge test"
+          ],
+          "purpose": "Execute the test harness against each injected mutant to verify detection; compute kill rate and triage survivors."
+        }
+      ],
+      "requirements": {
+        "mutation_score_threshold": ">= 90% mutant kill rate across audited core contracts.",
+        "triage": "Every surviving mutant must be analyzed: either patch the test harness with the missing assertion or document mutant equivalence in MUTATION_EXCEPTIONS.md."
+      },
+      "gate": {
+        "decision": "GO_NO_GO",
+        "criteria": "Mutation kill rate meets or exceeds 90%; zero unaddressed live mutants in core accounting logic."
+      }
+    },
+    {
+      "order": 10,
+      "stage": "property_based_testing_and_stateful_fuzzing",
+      "cadence": "release_gate_tier",
+      "objective": "Attempt to violate global system invariants across high-depth pseudo-random call sequences and cross-contract callback chains.",
+      "software": [
+        {
+          "name": "Foundry Invariant Engine",
+          "components": [
+            "forge test --match-contract Invariant"
+          ],
+          "config": {
+            "runs": 100000,
+            "depth": 500,
+            "fail_on_revert": false
+          }
+        },
+        {
+          "name": "Echidna",
+          "runtime": "Haskell binary in pinned container (pinned)",
+          "flags": [
+            "--config",
+            "echidna.yaml",
+            "--format",
+            "json"
+          ]
+        },
+        {
+          "name": "Medusa",
+          "runtime": "Go binary in pinned container (pinned)",
+          "flags": [
+            "fuzz",
+            "--config",
+            "medusa.json"
+          ]
+        }
+      ],
+      "requirements": {
+        "handler_architecture": [
+          "Dedicated ghost variable state trackers",
+          "Actor ghost accounts simulating non-privileged users vs. admin addresses",
+          "Cross-contract reentrancy-set handlers simulating malicious token and receiver hooks"
+        ],
+        "invariant_domains": [
+          "Conservation of capital (Total assets == total liabilities + protocol equity)",
+          "Solvency invariants across extreme multi-call combinations",
+          "Strict access control invariants (unprivileged callers cannot alter critical parameters)"
+        ]
+      },
+      "gate": {
+        "decision": "GO_NO_GO",
+        "criteria": "Zero invariant violations after target runs and depth across all active fuzzing engines."
+      }
+    },
+    {
+      "order": 11,
+      "stage": "symbolic_execution_and_bounded_model_checking",
+      "cadence": "release_gate_tier",
+      "objective": "Explore symbolic execution pathways at both source level and compiled EVM bytecode level, with dual bounded model checking engines.",
+      "software": [
+        {
+          "name": "solc SMTChecker",
+          "engines": [
+            "bmc",
+            "chc"
+          ],
+          "solvers": [
+            "z3",
+            "eldarica"
+          ],
+          "flags": [
+            "--model-checker-engine",
+            "all",
+            "--model-checker-targets",
+            "assert,underflow,overflow,divByZero,balance",
+            "--model-checker-timeout",
+            "120000"
+          ]
+        },
+        {
+          "name": "Halmos",
+          "runtime": "Python / Z3 (pinned)",
+          "role": "primary source-level bounded model checker",
+          "purpose": "Formal verification of Foundry tests using symbolic inputs (assertion proving across symbolic calldata and storage)."
+        },
+        {
+          "name": "Mythril",
+          "runtime": "Python / EVM bytecode symbolic analyzer (pinned)",
+          "flags": [
+            "analyze",
+            "--execution-timeout",
+            "600",
+            "--solver-timeout",
+            "30000",
+            "--strategy",
+            "bfs"
+          ],
+          "purpose": "Bytecode-level taint analysis, path exploration, and detection of delegatecall/unprotected selfdestruct vulnerabilities independent of Solidity AST quirks."
+        }
+      ],
+      "requirements": {
+        "analysis_targets": [
+          "Absence of reachable assert(false) statements",
+          "Absence of arithmetic overflows/underflows in low-level assembly / unchecked blocks",
+          "Bytecode taint analysis confirming sensitive storage slots cannot be overwritten by arbitrary call inputs"
+        ]
+      },
+      "gate": {
+        "decision": "GO_NO_GO",
+        "criteria": "All bounded paths proven safe; zero unmitigated bytecode vulnerabilities reported by Mythril/Halmos."
+      }
+    },
+    {
+      "order": 12,
+      "stage": "evm_level_theorem_proving",
+      "cadence": "release_gate_tier",
+      "objective": "Formally prove Foundry-test-expressed properties at the EVM bytecode level using the K Framework (KEVM), with coverage-enforced non-vacuity.",
+      "software": [
+        {
+          "name": "Kontrol (Runtime Verification)",
+          "runtime": "Pinned Docker digest (KEVM / K Framework)",
+          "components": [
+            "kontrol build",
+            "kontrol prove --match-test",
+            "kontrol view-coverage"
+          ],
+          "purpose": "Compile the Foundry test suite to KEVM and prove state-transition and invariant properties for all symbolic input states at the bytecode level."
+        }
+      ],
+      "requirements": {
+        "spec_verification": [
+          "State transition invariants across all possible inputs and system states, expressed as Foundry tests and proven at the bytecode level",
+          "Ghost variable inductive proofs for loop iterations and cross-contract callbacks",
+          "Non-vacuity enforced via node/rule coverage: every proven rule must exercise non-trivial branch coverage, with documented rationale that symbolic variables are genuinely unconstrained",
+          "Scribble-instrumented invariants from Stage 3 are included in the proof corpus where applicable"
+        ],
+        "artifacts_output": [
+          "artifacts/kontrol-proofs.json",
+          "artifacts/kontrol-coverage.json"
+        ]
+      },
+      "gate": {
+        "decision": "GO_NO_GO",
+        "criteria": "Zero failed Kontrol proofs; coverage thresholds met on all proven rules; zero undocumented vacuous proofs."
+      }
+    },
+    {
+      "order": 13,
+      "stage": "expert_threat_model_and_frontier_review",
+      "cadence": "release_gate_tier",
+      "objective": "Synthesize automated results, execute adversarial manual review, conduct economic/MEV attack analysis, audit specifications, and ratify all active suppressions.",
+      "participants": [
+        {
+          "role": "Principal Security Engineer (Kodr.pro)",
+          "responsibilities": [
+            "Specification correctness and completeness audit against protocol whitepaper",
+            "Privilege and governance escalation pathway mapping against ACCESS_CONTROL_MATRIX.json",
+            "Economic attack, oracle manipulation, and MEV extraction analysis",
+            "Cross-contract reentrancy and composability risk review",
+            "Final verification and sign-off on all entries within .security-suppressions.json and COVERAGE_EXCEPTIONS.md"
+          ]
+        },
+        {
+          "role": "Frontier Model Auxiliary Triage",
+          "runtime": "LLM via isolated API / local sandbox (separate OpenCode agent session)",
+          "responsibilities": [
+            "Adversarial diff analysis between git commits",
+            "Semantic checklist verification of business logic against protocol whitepaper",
+            "Second-pair-of-eyes check on proof-spec completeness (Halmos/Kontrol corpus) and test edge cases"
+          ]
+        }
+      ],
+      "requirements": {
+        "review_deliverables": [
+          "THREAT_MODEL.md (Actor matrix, trust boundaries, economic vectors, MEV exposure)",
+          "SPEC_AUDIT.md (Confirmation that written invariants match actual business intent)",
+          "MANUAL_REVIEW_SIGNOFF.md (Explicit review log of high-risk assembly, internal accounting functions, and active suppression audit)"
+        ]
+      },
+      "gate": {
+        "decision": "GO_NO_GO",
+        "criteria": "Signed cryptographic approval by Principal Security Engineer certifying threat model coverage, invariant completeness, and suppression justifications."
+      }
+    },
+    {
+      "order": 14,
+      "stage": "cryptographic_attestation_and_proof_packaging",
+      "cadence": "release_gate_tier",
+      "objective": "Generate immutable provenance receipts, sign test and analysis digests, compile the active suppression inventory, and publish the verified assurance bundle.",
+      "software": [
+        {
+          "name": "Cosign / Sigstore",
+          "purpose": "Keyless or keyed cryptographic signing of all test receipts, build manifests, and SBOMs."
+        },
+        {
+          "name": "GitHub Actions / Attestation",
+          "components": [
+            "actions/attest-build-provenance"
+          ],
+          "purpose": "Generate SLSA-compliant in-toto provenance attestations bound to the specific commit SHA."
+        },
+        {
+          "name": "Sourcify & Explorer CLI",
+          "purpose": "Exact match bytecode verification on block explorers with matching metadata IPFS hash."
+        },
+        {
+          "name": "Attestation Engine",
+          "runtime": "Custom stdlib-Python tool (tools/attest)",
+          "purpose": "Hash and assemble the evidence bundle, render SECURITY_ASSURANCE.md, drive cosign signing, and verify the signed bundle."
+        }
+      ],
+      "requirements": {
+        "security_assurance_manifest": {
+          "file": "SECURITY_ASSURANCE.md",
+          "mandatory_sections": [
+            "Executive Summary & Target Commit",
+            "Verification Methodology & Stage-by-Stage Results",
+            "Active Suppressions & Exceptions Inventory (Table: Tool, Rule ID, Target File/Line, Justification, Authorizing Reviewer, Commit SHA)",
+            "Coverage Exceptions Audit",
+            "On-Chain Deployment & Bytecode Verification Mapping"
+          ]
+        },
+        "published_bundle": [
+          "SECURITY_ASSURANCE.md",
+          "artifacts/sbom.cyclonedx.json",
+          "artifacts/ACCESS_CONTROL_MATRIX.json",
+          "artifacts/EVENT_EMISSION_AUDIT.json",
+          "artifacts/kontrol-proofs.json",
+          "artifacts/mutation-report.json",
+          "artifacts/mythril-results.json",
+          "artifacts/provenance.intoto.jsonl",
+          "signatures/bundle-attestation.sig"
+        ]
+      },
+      "gate": {
+        "decision": "GO_NO_GO",
+        "criteria": "All signed attestations, verifiable build hashes, active suppression tables, and execution logs committed to public repository root."
+      }
+    }
+  ]
+}

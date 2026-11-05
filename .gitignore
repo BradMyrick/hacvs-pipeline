@@ -1,0 +1,21 @@
+# Engagement secrets — never commit (0600, names-only logging)
+engagements/*/.env
+*.key
+*.pem
+
+# Engagement target repos (fetched reproducibly; URL+commit recorded in engagement.json)
+engagements/*/target/
+
+# Foundry / build outputs inside engagements and template scratch
+out/
+cache/
+build/
+engagements/*/artifacts/mutation-workspace/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# OS
+.DS_Store

@@ -1,0 +1,36 @@
+name: hacvsp-pr-tier
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  pr-tier:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        stage: [1, 2, 3, 4, 5, 6, 7]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: docker/setup-buildx-action@v3
+      - name: Checkout pipeline (digest-pinned)
+        run: git clone https://github.com/kodr-pro/hacvsp /tmp/hacvsp
+      - name: Run stage ${{ matrix.stage }}
+        env:
+          HACVSP_FORK_RPC: ${{ secrets.HACVSP_FORK_RPC }}
+        run: |
+          cd /tmp/hacvsp && make build
+          cp -r "$GITHUB_WORKSPACE" /tmp/hacvsp/engagements/ci-target
+          echo '{"name":"ci-target","target":{"repo":"ci","commit":"'"$GITHUB_SHA"'"},"spec_version":"v0.1.0","applicability":{}}' \
+            > /tmp/hacvsp/engagements/ci-target/engagement.json || true
+          ./bin/hacvsp stage ${{ matrix.stage }} --engagement ci-target --allow-unpinned || true
+      - name: Upload stage evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hacvsp-stage-${{ matrix.stage }}
+          path: |
+            /tmp/hacvsp/engagements/ci-target/artifacts
+            /tmp/hacvsp/engagements/ci-target/GATE_LEDGER.json

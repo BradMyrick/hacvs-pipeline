@@ -1,0 +1,27 @@
+{
+  "name": null,
+  "target": {
+    "repo": null,
+    "commit": null
+  },
+  "baseline_commit": null,
+  "spec_version": "v0.1.0",
+  "applicability": {
+    "proxy_architectures": [],
+    "erc_standards": [],
+    "core_contracts": [],
+    "fork_tests_required": true,
+    "fuzz_engines": ["forge", "echidna", "medusa"],
+    "echidna_contract": null,
+    "kontrol_match": "Proof*",
+    "kontrol_coverage_min_pct": 90,
+    "event_audit_categories": null
+  },
+  "deployment": {
+    "addresses": {}
+  },
+  "client": {
+    "name": null,
+    "whitepaper": null
+  }
+}

@@ -1,0 +1,11 @@
+# HACVSP echidna config (Stage 10)
+coverage: true
+testMode: assertion
+testLimit: 5000000
+shrinkLimit: 5000
+seqLen: 100
+deployer: "0x30000"
+sender: ["0x10000", "0x20000", "0x30000"]
+# OPERATOR: set the fuzzing target contract:
+# testMode: property   (for echidna-style property functions)
+# contractAddr: "TestContract"

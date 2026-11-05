@@ -1,0 +1,18 @@
+{
+  "fuzzing": {
+    "workers": 8,
+    "workerCount": 8,
+    "timeout": 0,
+    "testLimit": 5000000,
+    "callSequenceLength": 100,
+    "corpusDirectory": "cache/medusa-corpus",
+    "coverageEnabled": true,
+    "coverageCanonicalizeCounterexamples": true,
+    "targetContracts": [],
+    "targetContractsBalances": [],
+    "maxTxRetries": 20
+  },
+  "compilation": {
+    "platform": "foundry"
+  }
+}

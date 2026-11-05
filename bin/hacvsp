@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# HACVSP CLI — thin host launcher. Requires only: bash, python3, git, docker.
+set -euo pipefail
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+export HACVSP_ROOT="$REPO_ROOT"
+export PYTHONPATH="$REPO_ROOT/lib${PYTHONPATH:+:$PYTHONPATH}"
+exec python3 -m hacvsp.main "$@"

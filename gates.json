@@ -1,0 +1,133 @@
+{
+  "version": "v0.1.0",
+  "gates": [
+    {
+      "order": 1,
+      "stage": "dependency_hygiene_and_supply_chain_verification",
+      "cadence": "pr_commit_tier",
+      "decision": "GO_NO_GO",
+      "criteria": "Zero unreviewed CVEs in third-party libraries; all submodules pinned to immutable commit hashes.",
+      "artifacts_expected": [
+        "artifacts/sbom.cyclonedx.json",
+        "artifacts/dependency-checksums.sha256"
+      ]
+    },
+    {
+      "order": 2,
+      "stage": "deterministic_build_and_bytecode_size_validation",
+      "cadence": "pr_commit_tier",
+      "decision": "GO_NO_GO",
+      "criteria": "Bytecode matches bit-for-bit in clean hermetic container; zero contracts violate EIP-170 or EIP-3860 size boundaries.",
+      "artifacts_expected": [
+        "out/build-info/*.json",
+        "artifacts/canonical-ast.json",
+        "artifacts/reproducible-manifest.sha256",
+        "artifacts/bytecode-sizes.json"
+      ]
+    },
+    {
+      "order": 3,
+      "stage": "spec_linting_and_static_analysis",
+      "cadence": "pr_commit_tier",
+      "decision": "GO_NO_GO",
+      "criteria": "Zero unsuppressed static warnings; 100% of suppression entries cryptographically signed and structurally valid.",
+      "artifacts_expected": []
+    },
+    {
+      "order": 4,
+      "stage": "event_completeness_and_indexing_verification",
+      "cadence": "pr_commit_tier",
+      "decision": "GO_NO_GO",
+      "criteria": "Zero missing events on state-modifying functions; all primary entity identifiers correctly indexed.",
+      "artifacts_expected": [
+        "artifacts/EVENT_EMISSION_AUDIT.json"
+      ]
+    },
+    {
+      "order": 5,
+      "stage": "storage_layout_and_upgradeability_verification",
+      "cadence": "pr_commit_tier",
+      "decision": "GO_NO_GO",
+      "criteria": "Zero storage collision warnings; formal confirmation of initializer protection and facet selector uniqueness.",
+      "artifacts_expected": []
+    },
+    {
+      "order": 6,
+      "stage": "standards_compliance_and_conformance_suite",
+      "cadence": "pr_commit_tier",
+      "decision": "GO_NO_GO",
+      "criteria": "100% pass across all applicable reference standard compliance suites.",
+      "artifacts_expected": []
+    },
+    {
+      "order": 7,
+      "stage": "concrete_unit_differential_and_fork_testing",
+      "cadence": "pr_commit_tier",
+      "decision": "GO_NO_GO",
+      "criteria": "All unit, differential, and fork tests pass; coverage meets >= 95% threshold with all gap justifications approved.",
+      "artifacts_expected": []
+    },
+    {
+      "order": 8,
+      "stage": "access_control_and_privilege_matrix_validation",
+      "cadence": "release_gate_tier",
+      "decision": "GO_NO_GO",
+      "criteria": "Zero unauthorized callers can execute privileged state-modifying functions; 100% concordance between declared matrix and executable tests.",
+      "artifacts_expected": [
+        "artifacts/ACCESS_CONTROL_MATRIX.json",
+        "artifacts/ACCESS_CONTROL_MATRIX.md"
+      ]
+    },
+    {
+      "order": 9,
+      "stage": "mutation_testing",
+      "cadence": "release_gate_tier",
+      "decision": "GO_NO_GO",
+      "criteria": "Mutation kill rate meets or exceeds 90%; zero unaddressed live mutants in core accounting logic.",
+      "artifacts_expected": []
+    },
+    {
+      "order": 10,
+      "stage": "property_based_testing_and_stateful_fuzzing",
+      "cadence": "release_gate_tier",
+      "decision": "GO_NO_GO",
+      "criteria": "Zero invariant violations after target runs and depth across all active fuzzing engines.",
+      "artifacts_expected": []
+    },
+    {
+      "order": 11,
+      "stage": "symbolic_execution_and_bounded_model_checking",
+      "cadence": "release_gate_tier",
+      "decision": "GO_NO_GO",
+      "criteria": "All bounded paths proven safe; zero unmitigated bytecode vulnerabilities reported by Mythril/Halmos.",
+      "artifacts_expected": []
+    },
+    {
+      "order": 12,
+      "stage": "evm_level_theorem_proving",
+      "cadence": "release_gate_tier",
+      "decision": "GO_NO_GO",
+      "criteria": "Zero failed Kontrol proofs; coverage thresholds met on all proven rules; zero undocumented vacuous proofs.",
+      "artifacts_expected": [
+        "artifacts/kontrol-proofs.json",
+        "artifacts/kontrol-coverage.json"
+      ]
+    },
+    {
+      "order": 13,
+      "stage": "expert_threat_model_and_frontier_review",
+      "cadence": "release_gate_tier",
+      "decision": "GO_NO_GO",
+      "criteria": "Signed cryptographic approval by Principal Security Engineer certifying threat model coverage, invariant completeness, and suppression justifications.",
+      "artifacts_expected": []
+    },
+    {
+      "order": 14,
+      "stage": "cryptographic_attestation_and_proof_packaging",
+      "cadence": "release_gate_tier",
+      "decision": "GO_NO_GO",
+      "criteria": "All signed attestations, verifiable build hashes, active suppression tables, and execution logs committed to public repository root.",
+      "artifacts_expected": []
+    }
+  ]
+}

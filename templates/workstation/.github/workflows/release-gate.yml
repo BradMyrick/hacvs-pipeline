@@ -1,0 +1,43 @@
+name: hacvsp-release-gate
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  release-gate:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # NOTE: stage 13 (expert threat model & sign-off) is the human lane —
+        # it runs locally with the expert, never in CI.
+        stage: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: docker/setup-buildx-action@v3
+      - name: Checkout pipeline (digest-pinned)
+        run: git clone https://github.com/kodr-pro/hacvsp /tmp/hacvsp
+      - name: Run stage ${{ matrix.stage }}
+        env:
+          HACVSP_FORK_RPC: ${{ secrets.HACVSP_FORK_RPC }}
+          COSIGN_KEY: ${{ secrets.COSIGN_KEY }}
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+        run: |
+          cd /tmp/hacvsp && make build
+          ./bin/hacvsp stage ${{ matrix.stage }} --engagement ci-target --allow-unpinned
+      - name: GitHub attest-build-provenance (stage 14 inputs)
+        if: matrix.stage == 14
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: /tmp/hacvsp/engagements/ci-target/artifacts/bundle-manifest.json
+      - name: Upload stage evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hacvsp-stage-${{ matrix.stage }}
+          path: |
+            /tmp/hacvsp/engagements/ci-target/artifacts
+            /tmp/hacvsp/engagements/ci-target/GATE_LEDGER.json
