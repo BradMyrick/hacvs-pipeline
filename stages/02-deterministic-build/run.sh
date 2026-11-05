@@ -47,7 +47,7 @@ else
 fi
 
 # --- Bytecode sizes (runtime vs initcode) vs EIP-170 / EIP-3860
-python3 - "$TARGET" "$ART" <<'PY' || fail "bytecode size extraction failed"
+python3 - "$TARGET" "$ART" <<'PY' || fail "on-chain bytecode size limits violated (EIP-170/3860) -- see artifacts/bytecode-sizes.json"
 import json, pathlib, sys
 target, art = pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2])
 sizes = {}
@@ -66,9 +66,17 @@ for f in sorted(target.glob("out-a/**/*.json")):
         entry["eip170_violation"] = entry["runtime_bytes"] > 24576
         entry["eip3860_violation"] = entry["initcode_bytes"] > 49152
         sizes[name] = entry
-(art / "bytecode-sizes.json").write_text(json.dumps(sizes, indent=2) + "\n")
-viol = {k: v for k, v in sizes.items() if v["eip170_violation"] or v["eip3860_violation"]}
-print(json.dumps({"contracts": len(sizes), "violations": len(viol)}))
+# EIP-170/3860 govern ON-CHAIN contracts (src/**); test/mock artifacts are
+# informational only -- they are never deployed.
+viol = {k: v for k, v in sizes.items()
+        if (v["eip170_violation"] or v["eip3860_violation"]) and "/src/" in k}
+test_viol = {k: v for k, v in sizes.items()
+             if (v["eip170_violation"] or v["eip3860_violation"]) and "/src/" not in k}
+(art / "bytecode-sizes.json").write_text(json.dumps(
+    {"sizes": sizes, "on_chain_violations": viol,
+     "test_artifact_violations_informational": test_viol}, indent=2) + "\n")
+print(json.dumps({"contracts": len(sizes), "on_chain_violations": len(viol),
+                  "test_artifact_only": len(test_viol)}))
 sys.exit(1 if viol else 0)
 PY
 
