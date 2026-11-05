@@ -12,17 +12,19 @@ fail() { echo "[stage-08] FAIL: $*" | tee "$ART/stage-08-failures.txt" >&2; exit
 
 cd "$TARGET" || { fail "target/ missing"; exit 1; }
 
-forge build --build-info --force || fail "forge build failed"
+# build BEFORE any harness exists in test/ — the matrix needs fresh ASTs
+forge build --build-info --force || fail "forge build failed (check test/access-control for broken harnesses)"
 
 note "extracting access matrix from ASTs"
 # The harness is GENERATED ONCE, then operator-owned (wired imports/setUp).
 # Regenerating would overwrite the wiring — never clobber an existing file.
-if [ -f "$TARGET/test/access-control/GeneratedAccessMatrix.t.sol" ]; then
-  note "harness already present (operator-wired) — regenerating matrix only"
-  HARNESS_ARGS=""
-else
-  mkdir -p "$TARGET/test/access-control"
-  HARNESS_ARGS="--harness $TARGET/test/access-control/GeneratedAccessMatrix.t.sol"
+# The generated skeleton must NEVER sit compilable-but-broken in test/ (a
+# TODO import poisons every later forge build). Generate to .t.sol.example;
+# the operator wires it and renames to .t.sol. Never overwrite either.
+mkdir -p "$TARGET/test/access-control"
+HARNESS_ARGS=""
+if [ ! -f "$TARGET/test/access-control/GeneratedAccessMatrix.t.sol" ] &&    [ ! -f "$TARGET/test/access-control/GeneratedAccessMatrix.t.sol.example" ]; then
+  HARNESS_ARGS="--harness $TARGET/test/access-control/GeneratedAccessMatrix.t.sol.example"
 fi
 python3 /pipeline/tools/access-matrix/access_matrix.py \
   --build-info "$TARGET/out/build-info" \
