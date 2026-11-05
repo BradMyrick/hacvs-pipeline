@@ -21,7 +21,10 @@ note "generating mutants (gambit)"
 cat > "$WORK/gambit.json" <<'JSON'
 {
   "json_url": "local",
-  "files": ["src/"],
+  "files": ["src/PeekRegistry.sol", "src/CoveragePool.sol",
+            "src/DemoHeartbeat.sol", "src/adapters/HarvestKeeper.sol",
+            "src/adapters/PharaohEpochKeeper.sol"],
+  "outputDir": "artifacts/mutation-workspace/mutants",
   "emit_cf": false,
   "operators": ["BooleanSwap", "ComparisonSwap", "IfStatementInterceptor",
                 "StrictEqToEq", "SignedComparisonSwap", "LiteralMutation",
@@ -34,10 +37,10 @@ JSON
 if [ -d "$WORK/mutants" ]; then
   mv "$WORK/mutants" "$WORK/mutants.prev"
 fi
-gambit generate --json "$WORK/gambit.json" --output-dir "$WORK/mutants" \
+gambit mutate --json "$WORK/gambit.json" \
   > "$WORK/gambit-stdout.txt" 2>&1 || fail "gambit generate failed — see $WORK/gambit-stdout.txt"
 
-MUTANTS_JSON="$(find "$WORK/mutants" -maxdepth 1 -name 'mutants.json' -print -quit)"
+MUTANTS_JSON="$WORK/mutants/mutants.json"
 [ -n "$MUTANTS_JSON" ] || fail "gambit produced no mutants.json"
 TOTAL="$(python3 -c "import json;print(len(json.load(open('$MUTANTS_JSON'))))")"
 note "mutants generated: $TOTAL"
