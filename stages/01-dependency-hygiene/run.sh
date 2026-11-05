@@ -64,10 +64,11 @@ fi
 # --- Dependency checksums (libs/, lockfiles, remappings)
 note "generating dependency checksums"
 {
-  find lib -type f -print0 2>/dev/null | xargs -0 sha256sum 2>/dev/null
+  find lib -type f -print0 2>/dev/null | xargs -0 -r sha256sum 2>/dev/null || true
   for f in package-lock.json Cargo.lock foundry.toml remappings.txt .gitmodules; do
-    [ -f "$f" ] && sha256sum "$f"
+    if [ -f "$f" ]; then sha256sum "$f"; fi
   done
+  true   # group status must not leak a missing-file test under pipefail
 } | sort -k2 > "$ART/dependency-checksums.sha256" || fail "checksum generation failed"
 
 # --- Consolidated summary for the gate
