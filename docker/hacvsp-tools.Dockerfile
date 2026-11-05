@@ -102,7 +102,7 @@ RUN set -eux; \
       echo "${ADERYN_SHA256}  /tmp/aderyn.tar.xz" | sha256sum -c -; \
     else echo "!! WARN: aderyn UNPINNED — run make pin"; fi; \
     tar -xJf /tmp/aderyn.tar.xz -C /tmp; \
-    install -m 0755 /tmp/aderyn /usr/local/bin/aderyn; \
+    install -m 0755 /tmp/aderyn-x86_64-unknown-linux-gnu/aderyn /usr/local/bin/aderyn; \
     aderyn --version
 
 # Gambit (prebuilt linux binary)
