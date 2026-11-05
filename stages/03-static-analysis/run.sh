@@ -21,6 +21,7 @@ scribble --version 2>/dev/null || fail "scribble unavailable"
 note "scribble annotation instrumentation (spec parsing)"
 mkdir -p /tmp/scribble-out
 if scribble src --output-mode flat --output /tmp/scribble-out/instrumented.sol \
+    --instrumentation-metadata-file /tmp/scribble-out/metadata.json \
     > "$ART/scribble-output.txt" 2>&1; then
   note "scribble annotations parsed OK"
 else
