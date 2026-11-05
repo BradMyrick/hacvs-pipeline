@@ -1,26 +1,21 @@
 {
   "summary": {
-    "contracts": 1,
-    "functions_audited": 3,
+    "contracts": 30,
+    "functions_audited": 272,
     "critical_writes": 1,
-    "missing_event_failures": 1,
-    "indexing_warnings": 0,
+    "missing_event_failures": 0,
+    "indexing_warnings": 1,
     "suppressed": 0
   },
-  "missing_events": [
+  "missing_events": [],
+  "indexing_warnings": [
     {
       "contract": "Counter",
-      "source": "src/Counter.sol",
       "function": "constructor",
-      "writes": [
-        "owner"
-      ],
-      "categories": [
-        "ownership"
-      ]
+      "event": "OwnershipSet",
+      "issue": "no indexed identity topic (actor/target address, id)"
     }
   ],
-  "indexing_warnings": [],
   "mutation_graph": {
     "src/Counter.sol::Counter": {
       "": {
@@ -30,7 +25,9 @@
         "critical_writes": [
           "owner"
         ],
-        "emits": []
+        "emits": [
+          "OwnershipSet"
+        ]
       },
       "setNumber": {
         "writes": [
@@ -49,6 +46,36 @@
         "emits": [
           "NumberSet"
         ]
+      }
+    },
+    "test/invariant/Handler.sol::Handler": {
+      "": {
+        "writes": [
+          "REENTRANT",
+          "TARGET"
+        ],
+        "critical_writes": [],
+        "emits": []
+      }
+    },
+    "test/invariant/ReentrancyReceiver.sol::ReentrancyReceiver": {
+      "arm": {
+        "writes": [
+          "mode",
+          "reenterSelector",
+          "target"
+        ],
+        "critical_writes": [],
+        "emits": []
+      }
+    },
+    "test/unit/Counter.t.sol::CounterTest": {
+      "setUp": {
+        "writes": [
+          "c"
+        ],
+        "critical_writes": [],
+        "emits": []
       }
     }
   },

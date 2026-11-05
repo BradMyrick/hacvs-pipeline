@@ -492,6 +492,31 @@
       "forced": false,
       "commit": "67bf8856a786e26f897a8e908c186e06218a3f01",
       "timestamp": "2026-11-05T22:41:16+00:00"
+    },
+    {
+      "stage": 4,
+      "stage_name": "event_completeness_and_indexing_verification",
+      "cadence": "pr_commit_tier",
+      "decision": "NO_GO",
+      "criteria": "Zero missing events on state-modifying functions; all primary entity identifiers correctly indexed.",
+      "failures": [
+        "1 indexing warnings (actor/target identifiers must be indexed topics)"
+      ],
+      "evidence": [
+        "artifacts/EVENT_EMISSION_AUDIT.json"
+      ],
+      "details": {
+        "contracts": 30,
+        "functions_audited": 272,
+        "critical_writes": 1,
+        "missing_event_failures": 0,
+        "indexing_warnings": 1,
+        "suppressed": 0
+      },
+      "runner_exit": 0,
+      "forced": false,
+      "commit": "67bf8856a786e26f897a8e908c186e06218a3f01",
+      "timestamp": "2026-11-05T22:41:37+00:00"
     }
   ],
   "overall": {
