@@ -8,7 +8,7 @@ TARGET="$ENG/target"; ART="$ENG/artifacts"
 mkdir -p "$ART" "$ENG/signatures"
 stage_fail=0
 note() { echo "[stage-14] $*"; }
-fail() { echo "[stage-14] FAIL: $*" | tee -a "$ART/stage-14-failures.txt" >&2; stage_fail=1; }
+fail() { echo "[stage-14] FAIL: $*" | tee "$ART/stage-14-failures.txt" >&2; stage_fail=1; }
 
 command -v cosign >/dev/null 2>&1 || { fail "cosign not available in image"; exit 1; }
 

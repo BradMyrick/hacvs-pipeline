@@ -40,6 +40,9 @@ RUN set -eux; \
       libssl-dev pkg-config nodejs npm; \
     rm -rf /var/lib/apt/lists/*
 
+# Container git must accept host-owned engagement checkouts (uid mismatch)
+RUN git config --global --add safe.directory '*'
+
 # --- solc (static binary, sha256-pinned from binaries.soliditylang.org) ------
 RUN set -eux; \
     curl -fsSL \

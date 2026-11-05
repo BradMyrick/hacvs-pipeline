@@ -1,6 +1,119 @@
 {
   "spec_version": "v0.1.0",
-  "verdicts": [],
+  "verdicts": [
+    {
+      "stage": 1,
+      "stage_name": "dependency_hygiene_and_supply_chain_verification",
+      "cadence": "pr_commit_tier",
+      "decision": "NO_GO",
+      "criteria": "Zero unreviewed CVEs in third-party libraries; all submodules pinned to immutable commit hashes.",
+      "failures": [
+        "missing artifact: artifacts/sbom.cyclonedx.json",
+        "missing artifact: artifacts/dependency-checksums.sha256",
+        "missing artifact: artifacts/dependency-summary.json",
+        "dependency-summary.json missing",
+        "runner exit code 126"
+      ],
+      "evidence": [
+        "artifacts/sbom.cyclonedx.json",
+        "artifacts/dependency-checksums.sha256",
+        "artifacts/dependency-summary.json"
+      ],
+      "details": {},
+      "runner_exit": 126,
+      "forced": false,
+      "commit": "ebde60891f627eafac497a23c5820012cd4c9b70",
+      "timestamp": "2026-11-05T22:28:08+00:00"
+    },
+    {
+      "stage": 1,
+      "stage_name": "dependency_hygiene_and_supply_chain_verification",
+      "cadence": "pr_commit_tier",
+      "decision": "NO_GO",
+      "criteria": "Zero unreviewed CVEs in third-party libraries; all submodules pinned to immutable commit hashes.",
+      "failures": [
+        "runner exit code 1"
+      ],
+      "evidence": [
+        "artifacts/sbom.cyclonedx.json",
+        "artifacts/dependency-checksums.sha256",
+        "artifacts/dependency-summary.json"
+      ],
+      "details": {
+        "submodule_issues": 0,
+        "floating_dependencies": 0,
+        "trivy": {
+          "critical": 0,
+          "high": 0,
+          "medium": 0,
+          "total": 0
+        },
+        "suppressed_cves": []
+      },
+      "runner_exit": 1,
+      "forced": false,
+      "commit": "ebde60891f627eafac497a23c5820012cd4c9b70",
+      "timestamp": "2026-11-05T22:28:58+00:00"
+    },
+    {
+      "stage": 1,
+      "stage_name": "dependency_hygiene_and_supply_chain_verification",
+      "cadence": "pr_commit_tier",
+      "decision": "GO",
+      "criteria": "Zero unreviewed CVEs in third-party libraries; all submodules pinned to immutable commit hashes.",
+      "failures": [],
+      "evidence": [
+        "artifacts/sbom.cyclonedx.json",
+        "artifacts/dependency-checksums.sha256",
+        "artifacts/dependency-summary.json"
+      ],
+      "details": {
+        "submodule_issues": 0,
+        "floating_dependencies": 0,
+        "trivy": {
+          "critical": 0,
+          "high": 0,
+          "medium": 0,
+          "total": 0
+        },
+        "suppressed_cves": []
+      },
+      "runner_exit": 0,
+      "forced": false,
+      "commit": "ebde60891f627eafac497a23c5820012cd4c9b70",
+      "timestamp": "2026-11-05T22:29:58+00:00"
+    },
+    {
+      "stage": 1,
+      "stage_name": "dependency_hygiene_and_supply_chain_verification",
+      "cadence": "pr_commit_tier",
+      "decision": "NO_GO",
+      "criteria": "Zero unreviewed CVEs in third-party libraries; all submodules pinned to immutable commit hashes.",
+      "failures": [
+        "runner exit code 1"
+      ],
+      "evidence": [
+        "artifacts/sbom.cyclonedx.json",
+        "artifacts/dependency-checksums.sha256",
+        "artifacts/dependency-summary.json"
+      ],
+      "details": {
+        "submodule_issues": 0,
+        "floating_dependencies": 0,
+        "trivy": {
+          "critical": 0,
+          "high": 0,
+          "medium": 0,
+          "total": 0
+        },
+        "suppressed_cves": []
+      },
+      "runner_exit": 1,
+      "forced": false,
+      "commit": "ccc8f41ebdcf5e51a8f1e3c511780116f70e11f3",
+      "timestamp": "2026-11-05T22:31:03+00:00"
+    }
+  ],
   "overall": {
     "pr_commit_tier": "PENDING",
     "release_gate_tier": "PENDING"

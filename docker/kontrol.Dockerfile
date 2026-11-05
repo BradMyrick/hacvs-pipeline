@@ -17,6 +17,10 @@ RUN set -eux; \
 # shadows the stdlib and every invocation tracebacks.
 ENV HOME=/home/user
 USER user
+USER root
+RUN git config --global --add safe.directory '*' && \
+    su user -c 'git config --global --add safe.directory "*"'
+USER user
 RUN kontrol version || true
 
 WORKDIR /engagement

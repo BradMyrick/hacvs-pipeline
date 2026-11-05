@@ -1,0 +1,2 @@
+[stage-01] FAIL: checksum generation failed
+[stage-01] FAIL: git submodule status failed

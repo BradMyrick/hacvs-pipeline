@@ -30,8 +30,10 @@ fetch_sha() {  # fetch_sha URL
 echo "==> freezing base-image digests"
 update_pin BASE_TOOLS_DIGEST \
   "sha256:$(docker manifest inspect python:3.11-bookworm 2>/dev/null | jq -r '.manifests[0].digest // .config.digest' | sed 's/sha256://')"
-update_pin BASE_KONTROL_DIGEST \
-  "sha256:$(docker manifest inspect "runtimeverificationinc/kontrol:$(grep -E '^BASE_KONTROL_TAG=' "$PINS" | cut -d= -f2-)" 2>/dev/null | jq -r '.manifests[0].digest // .config.digest' | sed 's/sha256://')"
+# BASE_KONTROL_DIGEST is intentionally NOT auto-updated: `docker manifest
+# inspect` returns the per-arch manifest digest, which the registry refuses to
+# serve by reference. Bump it manually from the Docker Hub API on version
+# changes: https://hub.docker.com/v2/repositories/runtimeverificationinc/kontrol/tags
 
 echo "==> freezing release-artifact sha256s (downloads each artifact once)"
 V_ECHIDNA="$(grep -E '^ECHIDNA_VERSION=' "$PINS" | cut -d= -f2-)"

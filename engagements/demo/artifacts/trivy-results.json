@@ -1,0 +1,10 @@
+{
+  "SchemaVersion": 2,
+  "Trivy": {
+    "Version": "0.76.2"
+  },
+  "ReportID": "01a1add6-3691-77a8-86cc-d7fa678cdb11",
+  "CreatedAt": "2026-11-05T22:30:59.473502536Z",
+  "ArtifactName": "/engagement/artifacts/sbom.cyclonedx.json",
+  "ArtifactType": "cyclonedx"
+}
