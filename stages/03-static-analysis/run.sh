@@ -21,10 +21,14 @@ scribble --version 2>/dev/null || fail "scribble unavailable"
 note "scribble annotation instrumentation (spec parsing)"
 mkdir -p /tmp/scribble-out
 SOL_FILES="$(find src -name '*.sol' 2>/dev/null | tr '\n' ' ')"
+REMAPS="$(grep -vE '^\s*(#|$)' remappings.txt 2>/dev/null | tr '\n' ';' | sed 's/;$//')"
+SCRIBBLE_REMAP_FLAG=()
+[ -n "$REMAPS" ] && SCRIBBLE_REMAP_FLAG=(--path-remapping "$REMAPS")
 if [ -z "$SOL_FILES" ]; then
   note "no .sol sources under src/ (recorded — not a gate failure)"
 elif scribble $SOL_FILES --output-mode flat --output /tmp/scribble-out/instrumented.sol \
     --instrumentation-metadata-file /tmp/scribble-out/metadata.json \
+    "${SCRIBBLE_REMAP_FLAG[@]}" \
     > "$ART/scribble-output.txt" 2>&1; then
   note "scribble annotations parsed OK"
 else
