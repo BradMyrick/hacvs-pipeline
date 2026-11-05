@@ -29,7 +29,9 @@ elif scribble $SOL_FILES --output-mode flat --output /tmp/scribble-out/instrumen
   note "scribble annotations parsed OK"
 else
   rc=$?
-  if grep -qi "no annotations" "$ART/scribble-output.txt" 2>/dev/null; then
+  if grep -q "Found 0 annotations" "$ART/scribble-output.txt" 2>/dev/null; then
+    note "scribble parsed sources: 0 annotations (0.7.10 flat-output crash bug bypassed)"
+  elif grep -qi "no annotations" "$ART/scribble-output.txt" 2>/dev/null; then
     note "no scribble annotations found (recorded — not a gate failure)"
   else
     fail "scribble failed to parse annotations (rc=$rc) — see artifacts/scribble-output.txt"
