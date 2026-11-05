@@ -1,0 +1,98 @@
+{
+  "out-a/Actors.sol/Actors.json": {
+    "runtime_bytes": 817,
+    "initcode_bytes": 1414,
+    "eip170_violation": false,
+    "eip3860_violation": false
+  },
+  "out-a/Counter.sol/Counter.json": {
+    "runtime_bytes": 395,
+    "initcode_bytes": 439,
+    "eip170_violation": false,
+    "eip3860_violation": false
+  },
+  "out-a/Counter.t.sol/CounterTest.json": {
+    "runtime_bytes": 4755,
+    "initcode_bytes": 4807,
+    "eip170_violation": false,
+    "eip3860_violation": false
+  },
+  "out-a/Handler.sol/Handler.json": {
+    "runtime_bytes": 1162,
+    "initcode_bytes": 3614,
+    "eip170_violation": false,
+    "eip3860_violation": false
+  },
+  "out-a/InvariantTest.t.sol/InvariantTest.json": {
+    "runtime_bytes": 3558,
+    "initcode_bytes": 3610,
+    "eip170_violation": false,
+    "eip3860_violation": false
+  },
+  "out-a/ReentrancyReceiver.sol/ReentrancyReceiver.json": {
+    "runtime_bytes": 1582,
+    "initcode_bytes": 1631,
+    "eip170_violation": false,
+    "eip3860_violation": false
+  },
+  "out-a/StdConstants.sol/StdConstants.json": {
+    "runtime_bytes": 57,
+    "initcode_bytes": 85,
+    "eip170_violation": false,
+    "eip3860_violation": false
+  },
+  "out-a/StdError.sol/stdError.json": {
+    "runtime_bytes": 758,
+    "initcode_bytes": 788,
+    "eip170_violation": false,
+    "eip3860_violation": false
+  },
+  "out-a/StdJson.sol/stdJson.json": {
+    "runtime_bytes": 57,
+    "initcode_bytes": 85,
+    "eip170_violation": false,
+    "eip3860_violation": false
+  },
+  "out-a/StdMath.sol/stdMath.json": {
+    "runtime_bytes": 57,
+    "initcode_bytes": 85,
+    "eip170_violation": false,
+    "eip3860_violation": false
+  },
+  "out-a/StdStorage.sol/stdStorage.json": {
+    "runtime_bytes": 57,
+    "initcode_bytes": 85,
+    "eip170_violation": false,
+    "eip3860_violation": false
+  },
+  "out-a/StdStorage.sol/stdStorageSafe.json": {
+    "runtime_bytes": 57,
+    "initcode_bytes": 85,
+    "eip170_violation": false,
+    "eip3860_violation": false
+  },
+  "out-a/StdStyle.sol/StdStyle.json": {
+    "runtime_bytes": 57,
+    "initcode_bytes": 85,
+    "eip170_violation": false,
+    "eip3860_violation": false
+  },
+  "out-a/StdToml.sol/stdToml.json": {
+    "runtime_bytes": 57,
+    "initcode_bytes": 85,
+    "eip170_violation": false,
+    "eip3860_violation": false
+  },
+  "out-a/console.sol/console.json": {
+    "runtime_bytes": 57,
+    "initcode_bytes": 85,
+    "eip170_violation": false,
+    "eip3860_violation": false
+  },
+  "out-a/safeconsole.sol/safeconsole.json": {
+    "runtime_bytes": 57,
+    "initcode_bytes": 85,
+    "eip170_violation": false,
+    "eip3860_violation": false
+  }
+}

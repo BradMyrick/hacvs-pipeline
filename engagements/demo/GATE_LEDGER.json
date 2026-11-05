@@ -112,6 +112,236 @@
       "forced": false,
       "commit": "ccc8f41ebdcf5e51a8f1e3c511780116f70e11f3",
       "timestamp": "2026-11-05T22:31:03+00:00"
+    },
+    {
+      "stage": 1,
+      "stage_name": "dependency_hygiene_and_supply_chain_verification",
+      "cadence": "pr_commit_tier",
+      "decision": "GO",
+      "criteria": "Zero unreviewed CVEs in third-party libraries; all submodules pinned to immutable commit hashes.",
+      "failures": [],
+      "evidence": [
+        "artifacts/sbom.cyclonedx.json",
+        "artifacts/dependency-checksums.sha256",
+        "artifacts/dependency-summary.json"
+      ],
+      "details": {
+        "submodule_issues": 0,
+        "floating_dependencies": 0,
+        "trivy": {
+          "critical": 0,
+          "high": 0,
+          "medium": 0,
+          "total": 0
+        },
+        "suppressed_cves": []
+      },
+      "runner_exit": 0,
+      "forced": false,
+      "commit": "ccc8f41ebdcf5e51a8f1e3c511780116f70e11f3",
+      "timestamp": "2026-11-05T22:36:30+00:00"
+    },
+    {
+      "stage": 2,
+      "stage_name": "deterministic_build_and_bytecode_size_validation",
+      "cadence": "pr_commit_tier",
+      "decision": "NO_GO",
+      "criteria": "Bytecode matches bit-for-bit in clean hermetic container; zero contracts violate EIP-170 or EIP-3860 size boundaries.",
+      "failures": [
+        "missing artifact: artifacts/canonical-ast.json",
+        "runner exit code 1"
+      ],
+      "evidence": [
+        "artifacts/bytecode-sizes.json",
+        "artifacts/canonical-ast.json",
+        "artifacts/reproducible-manifest.sha256",
+        "artifacts/reproducibility.diff"
+      ],
+      "details": {
+        "reproducible": true,
+        "contracts": 16,
+        "size_violations": [],
+        "build_info_files": 2
+      },
+      "runner_exit": 1,
+      "forced": false,
+      "commit": "ccc8f41ebdcf5e51a8f1e3c511780116f70e11f3",
+      "timestamp": "2026-11-05T22:36:46+00:00"
+    },
+    {
+      "stage": 2,
+      "stage_name": "deterministic_build_and_bytecode_size_validation",
+      "cadence": "pr_commit_tier",
+      "decision": "GO",
+      "criteria": "Bytecode matches bit-for-bit in clean hermetic container; zero contracts violate EIP-170 or EIP-3860 size boundaries.",
+      "failures": [],
+      "evidence": [
+        "artifacts/bytecode-sizes.json",
+        "artifacts/canonical-ast.json",
+        "artifacts/reproducible-manifest.sha256",
+        "artifacts/reproducibility.diff"
+      ],
+      "details": {
+        "reproducible": true,
+        "contracts": 16,
+        "size_violations": [],
+        "ast_sources": 25,
+        "build_info_files": 2
+      },
+      "runner_exit": 0,
+      "forced": false,
+      "commit": "ccc8f41ebdcf5e51a8f1e3c511780116f70e11f3",
+      "timestamp": "2026-11-05T22:37:16+00:00"
+    },
+    {
+      "stage": 3,
+      "stage_name": "spec_linting_and_static_analysis",
+      "cadence": "pr_commit_tier",
+      "decision": "NO_GO",
+      "criteria": "Zero unsuppressed static warnings; 100% of suppression entries cryptographically signed and structurally valid.",
+      "failures": [
+        "runner exit code 1"
+      ],
+      "evidence": [
+        "artifacts/static-analysis-summary.json",
+        "artifacts/slither-report.json",
+        "artifacts/slither-report.sarif",
+        "artifacts/aderyn-report.sarif",
+        "artifacts/slither-checklist.md"
+      ],
+      "details": {
+        "totals": {
+          "total": 4,
+          "suppressed": 0,
+          "unsuppressed": {
+            "critical": 0,
+            "high": 0,
+            "medium": 0,
+            "low": 3,
+            "info": 1
+          },
+          "by_engine": {
+            "slither": 1,
+            "aderyn": 3
+          }
+        },
+        "invalid_suppressions": [],
+        "engines": {
+          "slither": {
+            "report_present": true,
+            "findings": 1
+          },
+          "aderyn": {
+            "report_present": true,
+            "findings": 3
+          }
+        },
+        "suppression_count": 0
+      },
+      "runner_exit": 1,
+      "forced": false,
+      "commit": "ccc8f41ebdcf5e51a8f1e3c511780116f70e11f3",
+      "timestamp": "2026-11-05T22:37:30+00:00"
+    },
+    {
+      "stage": 3,
+      "stage_name": "spec_linting_and_static_analysis",
+      "cadence": "pr_commit_tier",
+      "decision": "NO_GO",
+      "criteria": "Zero unsuppressed static warnings; 100% of suppression entries cryptographically signed and structurally valid.",
+      "failures": [
+        "runner exit code 1"
+      ],
+      "evidence": [
+        "artifacts/static-analysis-summary.json",
+        "artifacts/slither-report.json",
+        "artifacts/slither-report.sarif",
+        "artifacts/aderyn-report.sarif",
+        "artifacts/slither-checklist.md"
+      ],
+      "details": {
+        "totals": {
+          "total": 4,
+          "suppressed": 0,
+          "unsuppressed": {
+            "critical": 0,
+            "high": 0,
+            "medium": 0,
+            "low": 3,
+            "info": 1
+          },
+          "by_engine": {
+            "slither": 1,
+            "aderyn": 3
+          }
+        },
+        "invalid_suppressions": [],
+        "engines": {
+          "slither": {
+            "report_present": true,
+            "findings": 1
+          },
+          "aderyn": {
+            "report_present": true,
+            "findings": 3
+          }
+        },
+        "suppression_count": 0
+      },
+      "runner_exit": 1,
+      "forced": false,
+      "commit": "ccc8f41ebdcf5e51a8f1e3c511780116f70e11f3",
+      "timestamp": "2026-11-05T22:38:02+00:00"
+    },
+    {
+      "stage": 3,
+      "stage_name": "spec_linting_and_static_analysis",
+      "cadence": "pr_commit_tier",
+      "decision": "NO_GO",
+      "criteria": "Zero unsuppressed static warnings; 100% of suppression entries cryptographically signed and structurally valid.",
+      "failures": [
+        "runner exit code 1"
+      ],
+      "evidence": [
+        "artifacts/static-analysis-summary.json",
+        "artifacts/slither-report.json",
+        "artifacts/slither-report.sarif",
+        "artifacts/aderyn-report.sarif",
+        "artifacts/slither-checklist.md"
+      ],
+      "details": {
+        "totals": {
+          "total": 4,
+          "suppressed": 0,
+          "unsuppressed": {
+            "critical": 0,
+            "high": 0,
+            "medium": 0,
+            "low": 3,
+            "info": 1
+          },
+          "by_engine": {
+            "slither": 1,
+            "aderyn": 3
+          }
+        },
+        "invalid_suppressions": [],
+        "engines": {
+          "slither": {
+            "report_present": true,
+            "findings": 1
+          },
+          "aderyn": {
+            "report_present": true,
+            "findings": 3
+          }
+        },
+        "suppression_count": 0
+      },
+      "runner_exit": 1,
+      "forced": false,
+      "commit": "ccc8f41ebdcf5e51a8f1e3c511780116f70e11f3",
+      "timestamp": "2026-11-05T22:38:47+00:00"
     }
   ],
   "overall": {

@@ -1,0 +1,7 @@
+
+Detector: immutable-states
+Counter.owner (src/Counter.sol#12) should be immutable 
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#state-variables-that-could-be-declared-immutable
+. analyzed (1 contracts with 102 detectors), 1 result(s) found
+INFO:Slither:/engagement/artifacts/slither-report.json exists already, the overwrite is prevented
+INFO:Slither:/engagement/artifacts/slither-report.sarif exists already, the overwrite is prevented

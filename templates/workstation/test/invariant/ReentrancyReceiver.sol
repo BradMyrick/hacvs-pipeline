@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.38;
+pragma solidity >=0.8.28 <0.9.0;
 
 /// @title ReentrancyReceiver — spec Stage 10: cross-contract reentrancy-set
 ///        handlers simulating malicious token and receiver hooks.

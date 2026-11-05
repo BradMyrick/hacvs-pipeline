@@ -1,0 +1,334 @@
+[stage-02] verifying foundry.toml against SPEC compiler settings
+[stage-02] build #1 (out-a)
+Compiling 25 files with Solc 0.8.38
+Solc 0.8.38 finished in 1.60s
+Compiler run successful with warnings:
+Warning (8158): Solver z3 was selected for SMTChecker but it is not available.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+[stage-02] build #2 (out-b)
+Compiling 25 files with Solc 0.8.38
+Solc 0.8.38 finished in 1.61s
+Compiler run successful with warnings:
+Warning (8158): Solver z3 was selected for SMTChecker but it is not available.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+[stage-02] comparing out-a vs out-b byte-for-byte
+[stage-02] builds are bit-for-bit identical
+{"contracts": 16, "violations": 0}
+no AST sources found in build-info
+[stage-02] FAIL: canonical AST extraction failed
+find: ‘out/build-info’: No such file or directory
+[stage-02] FAIL: manifest generation failed
+
+[stage-02] verifying foundry.toml against SPEC compiler settings
+[stage-02] build #1 (out-a)
+Compiling 25 files with Solc 0.8.38
+Solc 0.8.38 finished in 1.63s
+Compiler run successful with warnings:
+Warning (8158): Solver z3 was selected for SMTChecker but it is not available.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+[stage-02] build #2 (out-b)
+Compiling 25 files with Solc 0.8.38
+Solc 0.8.38 finished in 1.66s
+Compiler run successful with warnings:
+Warning (8158): Solver z3 was selected for SMTChecker but it is not available.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+Warning (7649): CHC analysis was not possible since no Horn solver was found and enabled. The accepted solvers for CHC are Eldarica and z3.
+Warning (3993): The BMC engine of the SMTChecker is deprecated and will be removed in a future release. Please use the CHC engine instead.
+Warning (7710): BMC analysis was not possible since no SMT solver was found and enabled. The accepted solvers for BMC are cvc5 and z3.
+[stage-02] comparing out-a vs out-b byte-for-byte
+[stage-02] builds are bit-for-bit identical
+{"contracts": 16, "violations": 0}
+canonical AST: 25 sources

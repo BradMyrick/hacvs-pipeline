@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.38;
+pragma solidity >=0.8.28 <0.9.0;
 
 /// @notice Minimal example target so the scaffold builds out of the box.
 ///         Replace with the real protocol sources.

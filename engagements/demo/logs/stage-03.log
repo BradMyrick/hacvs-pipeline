@@ -1,0 +1,96 @@
+[stage-03] tool versions
+0.11.6
+aderyn 0.6.8
+0.7.10
+[stage-03] scribble annotation instrumentation (spec parsing)
+[stage-03] FAIL: scribble failed to parse annotations (rc=1) — see artifacts/scribble-output.txt
+[stage-03] annotation directives found in src/: 0
+[stage-03] slither analysis
+[stage-03] slither exited non-zero (findings present or config error — aggregator will judge)
+[stage-03] aderyn analysis
+[stage-03] SARIF aggregation + suppression gating
+[sarif-aggregator] 4 findings, 0 suppressed, 0 invalid suppressions -> /engagement/artifacts/static-analysis-summary.json
+[stage-03] summary:
+{
+  "totals": {
+    "total": 4,
+    "suppressed": 0,
+    "unsuppressed": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 3,
+      "info": 1
+    },
+    "by_engine": {
+      "slither": 1,
+      "aderyn": 3
+    }
+  },
+  "invalid_suppressions": []
+}
+
+[stage-03] tool versions
+0.11.6
+aderyn 0.6.8
+0.7.10
+[stage-03] scribble annotation instrumentation (spec parsing)
+[stage-03] FAIL: scribble failed to parse annotations (rc=1) — see artifacts/scribble-output.txt
+[stage-03] annotation directives found in src/: 0
+[stage-03] slither analysis
+[stage-03] slither exited non-zero (findings present or config error — aggregator will judge)
+[stage-03] aderyn analysis
+[stage-03] SARIF aggregation + suppression gating
+[sarif-aggregator] 4 findings, 0 suppressed, 0 invalid suppressions -> /engagement/artifacts/static-analysis-summary.json
+[stage-03] summary:
+{
+  "totals": {
+    "total": 4,
+    "suppressed": 0,
+    "unsuppressed": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 3,
+      "info": 1
+    },
+    "by_engine": {
+      "slither": 1,
+      "aderyn": 3
+    }
+  },
+  "invalid_suppressions": []
+}
+
+[stage-03] tool versions
+0.11.6
+aderyn 0.6.8
+0.7.10
+[stage-03] scribble annotation instrumentation (spec parsing)
+[stage-03] FAIL: scribble failed to parse annotations (rc=1) — see artifacts/scribble-output.txt
+[stage-03] annotation directives found in src/: 0
+[stage-03] slither analysis
+[stage-03] slither exited non-zero (findings present or config error — aggregator will judge)
+[stage-03] aderyn analysis
+[stage-03] SARIF aggregation + suppression gating
+[sarif-aggregator] 4 findings, 0 suppressed, 0 invalid suppressions -> /engagement/artifacts/static-analysis-summary.json
+[stage-03] summary:
+{
+  "totals": {
+    "total": 4,
+    "suppressed": 0,
+    "unsuppressed": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 3,
+      "info": 1
+    },
+    "by_engine": {
+      "slither": 1,
+      "aderyn": 3
+    }
+  },
+  "invalid_suppressions": []
+}
+

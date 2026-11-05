@@ -1,0 +1,68 @@
+{
+  "engines": {
+    "slither": {
+      "report_present": true,
+      "findings": 1
+    },
+    "aderyn": {
+      "report_present": true,
+      "findings": 3
+    }
+  },
+  "totals": {
+    "total": 4,
+    "suppressed": 0,
+    "unsuppressed": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 3,
+      "info": 1
+    },
+    "by_engine": {
+      "slither": 1,
+      "aderyn": 3
+    }
+  },
+  "invalid_suppressions": [],
+  "unsuppressed_findings": [
+    {
+      "engine": "slither",
+      "check": "immutable-states",
+      "severity": "info",
+      "confidence": "High",
+      "file": "src/Counter.sol",
+      "lines": "12-12",
+      "description": "Counter.owner (src/Counter.sol#12) should be immutable \n"
+    },
+    {
+      "engine": "aderyn",
+      "check": "centralization-risk",
+      "severity": "low",
+      "confidence": "",
+      "file": "src/Counter.sol",
+      "lines": "",
+      "description": "Contracts have owners with privileged rights to perform admin tasks and need to be trusted to not perform malicious updates or drain funds."
+    },
+    {
+      "engine": "aderyn",
+      "check": "modifier-used-only-once",
+      "severity": "low",
+      "confidence": "",
+      "file": "src/Counter.sol",
+      "lines": "",
+      "description": "Consider removing the modifier or inlining the logic into the calling function."
+    },
+    {
+      "engine": "aderyn",
+      "check": "state-variable-could-be-immutable",
+      "severity": "low",
+      "confidence": "",
+      "file": "src/Counter.sol",
+      "lines": "",
+      "description": "State variables that are only changed in the constructor should be declared immutable to save gas. Add the `immutable` attribute to state variables that are only changed in the constructor"
+    }
+  ],
+  "suppressed_findings": [],
+  "suppression_canonical_digests": []
+}

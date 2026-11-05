@@ -1,0 +1,29 @@
+Compile errors encountered:
+SolcJS 0.8.29:
+ParserError: Source file requires different compiler version (current compiler is 0.8.29+commit.ab55807c.Linux.g++) - note that nightly builds are considered to be strictly less than the released version
+ --> src/Counter.sol:2:1:
+  |
+2 | pragma solidity 0.8.38;
+  | ^^^^^^^^^^^^^^^^^^^^^^^
+
+
+SolcJS 0.7.6:
+src/Counter.sol:2:1: ParserError: Source file requires different compiler version (current compiler is 0.7.6+commit.7338295f.Linux.g++) - note that nightly builds are considered to be strictly less than the released version
+pragma solidity 0.8.38;
+^---------------------^
+
+SolcJS 0.6.12:
+src/Counter.sol:2:1: ParserError: Source file requires different compiler version (current compiler is 0.6.12+commit.27d51765.Linux.g++) - note that nightly builds are considered to be strictly less than the released version
+pragma solidity 0.8.38;
+^---------------------^
+
+SolcJS 0.5.17:
+src/Counter.sol:2:1: ParserError: Source file requires different compiler version (current compiler is 0.5.17+commit.d19bba13.Linux.g++ - note that nightly builds are considered to be strictly less than the released version
+pragma solidity 0.8.38;
+^---------------------^
+
+SolcJS 0.4.26:
+src/Counter.sol:10:23: ParserError: Expected ';' but got '('
+    error Unauthorized();
+                      ^
+

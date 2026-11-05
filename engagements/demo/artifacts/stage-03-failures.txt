@@ -1,0 +1,1 @@
+[stage-03] FAIL: scribble failed to parse annotations (rc=1) — see artifacts/scribble-output.txt
