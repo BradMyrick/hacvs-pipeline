@@ -67,37 +67,37 @@ services:
         KONTROL_BASE: ${BASE_KONTROL_IMAGE}:${BASE_KONTROL_TAG}@${BASE_KONTROL_DIGEST}
     image: ${KONTROL_IMAGE}
 
-  stage-01: { <<: *stage-common, command: ["/bin/bash", "/pipeline/stages/01-dependency-hygiene/run.sh"] }
-  stage-02: { <<: *stage-common, command: ["/bin/bash", "/pipeline/stages/02-deterministic-build/run.sh"] }
-  stage-03: { <<: *stage-common, command: ["/bin/bash", "/pipeline/stages/03-static-analysis/run.sh"] }
-  stage-04: { <<: *stage-common, command: ["/bin/bash", "/pipeline/stages/04-event-emission/run.sh"] }
-  stage-05: { <<: *stage-common, command: ["/bin/bash", "/pipeline/stages/05-storage-upgrade/run.sh"] }
-  stage-06: { <<: *stage-common, command: ["/bin/bash", "/pipeline/stages/06-standards-compliance/run.sh"] }
+  stage-01: { <<: *stage-common, command: ["/pipeline/stages/01-dependency-hygiene/run.sh"] }
+  stage-02: { <<: *stage-common, command: ["/pipeline/stages/02-deterministic-build/run.sh"] }
+  stage-03: { <<: *stage-common, command: ["/pipeline/stages/03-static-analysis/run.sh"] }
+  stage-04: { <<: *stage-common, command: ["/pipeline/stages/04-event-emission/run.sh"] }
+  stage-05: { <<: *stage-common, command: ["/pipeline/stages/05-storage-upgrade/run.sh"] }
+  stage-06: { <<: *stage-common, command: ["/pipeline/stages/06-standards-compliance/run.sh"] }
   stage-07:
     <<: *stage-common
-    command: ["/bin/bash", "/pipeline/stages/07-unit-diff-fork/run.sh"]
+    command: ["/pipeline/stages/07-unit-diff-fork/run.sh"]
     environment:
       - HACVSP_FORK_RPC=${HACVSP_FORK_RPC:-}
-  stage-08: { <<: *stage-common, command: ["/bin/bash", "/pipeline/stages/08-access-control/run.sh"] }
-  stage-09: { <<: *stage-common, command: ["/bin/bash", "/pipeline/stages/09-mutation/run.sh"] }
+  stage-08: { <<: *stage-common, command: ["/pipeline/stages/08-access-control/run.sh"] }
+  stage-09: { <<: *stage-common, command: ["/pipeline/stages/09-mutation/run.sh"] }
   stage-10:
     <<: *stage-common
-    command: ["/bin/bash", "/pipeline/stages/10-stateful-fuzzing/run.sh"]
+    command: ["/pipeline/stages/10-stateful-fuzzing/run.sh"]
     environment:
       - HACVSP_INV_RUNS=${HACVSP_INV_RUNS:-100000}
       - HACVSP_INV_DEPTH=${HACVSP_INV_DEPTH:-500}
-  stage-11: { <<: *stage-common, command: ["/bin/bash", "/pipeline/stages/11-symbolic-bmc/run.sh"] }
+  stage-11: { <<: *stage-common, command: ["/pipeline/stages/11-symbolic-bmc/run.sh"] }
   stage-12:
     <<: *stage-common
     image: ${KONTROL_IMAGE}
     user: "1010:1010"
-    command: ["/bin/bash", "/pipeline/stages/12-evm-theorem-proving/run.sh"]
+    command: ["/pipeline/stages/12-evm-theorem-proving/run.sh"]
     volumes:
       - ${ENGAGEMENT_DIR:-./engagements/_template}:/engagement
       - ./:/pipeline:ro
       - hacvsp-kontrol:/home/user/.kupyter
-  stage-13: { <<: *stage-common, command: ["/bin/bash", "/pipeline/stages/13-expert-review/run.sh"] }
-  stage-14: { <<: *stage-common, command: ["/bin/bash", "/pipeline/stages/14-attestation/run.sh"] }
+  stage-13: { <<: *stage-common, command: ["/pipeline/stages/13-expert-review/run.sh"] }
+  stage-14: { <<: *stage-common, command: ["/pipeline/stages/14-attestation/run.sh"] }
 
 volumes:
   hacvsp-foundry:
