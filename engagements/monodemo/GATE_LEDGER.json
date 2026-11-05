@@ -81,6 +81,63 @@
       "forced": false,
       "commit": "27de6be82db6a7c9518ecd91ba91a2e8fc16caa5",
       "timestamp": "2026-11-05T22:59:39+00:00"
+    },
+    {
+      "stage": 1,
+      "stage_name": "dependency_hygiene_and_supply_chain_verification",
+      "cadence": "pr_commit_tier",
+      "decision": "GO",
+      "criteria": "Zero unreviewed CVEs in third-party libraries; all submodules pinned to immutable commit hashes.",
+      "failures": [],
+      "evidence": [
+        "artifacts/sbom.cyclonedx.json",
+        "artifacts/dependency-checksums.sha256",
+        "artifacts/dependency-summary.json"
+      ],
+      "details": {
+        "submodule_issues": 0,
+        "floating_dependencies": 0,
+        "trivy": {
+          "critical": 0,
+          "high": 0,
+          "medium": 0,
+          "total": 0
+        },
+        "suppressed_cves": []
+      },
+      "runner_exit": 0,
+      "forced": false,
+      "commit": "27de6be82db6a7c9518ecd91ba91a2e8fc16caa5",
+      "timestamp": "2026-11-05T23:01:41+00:00"
+    },
+    {
+      "stage": 2,
+      "stage_name": "deterministic_build_and_bytecode_size_validation",
+      "cadence": "pr_commit_tier",
+      "decision": "NO_GO",
+      "criteria": "Bytecode matches bit-for-bit in clean hermetic container; zero contracts violate EIP-170 or EIP-3860 size boundaries.",
+      "failures": [
+        "missing artifact: artifacts/canonical-ast.json",
+        "build not reproducible (artifacts/reproducibility.diff non-empty)",
+        "no build-info JSONs under target (out/build-info/*.json)",
+        "runner exit code 1"
+      ],
+      "evidence": [
+        "artifacts/bytecode-sizes.json",
+        "artifacts/canonical-ast.json",
+        "artifacts/reproducible-manifest.sha256",
+        "artifacts/reproducibility.diff"
+      ],
+      "details": {
+        "reproducible": false,
+        "contracts": 0,
+        "size_violations": [],
+        "build_info_files": 0
+      },
+      "runner_exit": 1,
+      "forced": false,
+      "commit": "27de6be82db6a7c9518ecd91ba91a2e8fc16caa5",
+      "timestamp": "2026-11-05T23:02:02+00:00"
     }
   ],
   "overall": {

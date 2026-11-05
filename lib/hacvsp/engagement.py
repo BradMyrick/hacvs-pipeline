@@ -124,8 +124,9 @@ def repin(slug: str, commit: str | None = None) -> Path:
     eng = path(slug)
     repo_dir = eng / "repo" if (eng / "repo").exists() else eng / "target"
     subprocess.run(["git", "-C", str(repo_dir), "fetch", "--recurse-submodules", "origin"], check=True)
-    if commit:
-        subprocess.run(["git", "-C", str(repo_dir), "checkout", commit], check=True)
+    # no explicit commit -> follow the branch upstream (typical "audit the new PR state")
+    target_ref = commit or "@{upstream}"
+    subprocess.run(["git", "-C", str(repo_dir), "checkout", target_ref], check=True)
     subprocess.run(
         ["git", "-C", str(repo_dir), "submodule", "update", "--init", "--recursive"],
         check=True,

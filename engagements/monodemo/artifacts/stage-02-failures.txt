@@ -1,1 +1,1 @@
-[stage-02] FAIL: manifest generation failed
+[stage-02] FAIL: forge build #1 failed

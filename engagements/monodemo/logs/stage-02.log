@@ -61,3 +61,32 @@ no AST sources found in build-info
 find: ‘out-a’: No such file or directory
 [stage-02] FAIL: manifest generation failed
 
+[stage-02] verifying foundry.toml against SPEC compiler settings
+[stage-02] build #1 (out-a)
+[2m2026-11-05T23:02:02.809032Z[0m [31mERROR[0m [2mfoundry_compilers_artifacts_solc::sources[0m[2m:[0m [3merror[0m[2m=[0m"/engagement/repo/contracts/lib/forge-std/src/Test.sol": No such file or directory (os error 2)
+Unable to resolve imports:
+      "forge-std/Test.sol" in "/engagement/repo/contracts/test/unit/Counter.t.sol"
+with remappings:
+      forge-std/=/engagement/repo/contracts/lib/forge-std/src/
+      @openzeppelin/=/engagement/repo/contracts/lib/openzeppelin-contracts/
+      @openzeppelin-upgradeable/=/engagement/repo/contracts/lib/openzeppelin-contracts-upgradeable/
+      solady/=/engagement/repo/contracts/lib/solady/src/
+[2m2026-11-05T23:02:02.813008Z[0m [31mERROR[0m [2mfoundry_compilers_artifacts_solc::sources[0m[2m:[0m [3merror[0m[2m=[0m"/engagement/repo/contracts/lib/forge-std/src/Test.sol": No such file or directory (os error 2)
+Unable to resolve imports:
+      "forge-std/Test.sol" in "/engagement/repo/contracts/test/unit/Counter.t.sol"
+with remappings:
+      forge-std/=/engagement/repo/contracts/lib/forge-std/src/
+      @openzeppelin/=/engagement/repo/contracts/lib/openzeppelin-contracts/
+      @openzeppelin-upgradeable/=/engagement/repo/contracts/lib/openzeppelin-contracts-upgradeable/
+      solady/=/engagement/repo/contracts/lib/solady/src/
+Compiling 2 files with Solc 0.8.38
+Solc 0.8.38 finished in 1.93ms
+Error: Compiler run failed:
+Error (6275): Source "lib/forge-std/src/Test.sol" not found: File not found. Searched the following locations: "/engagement/repo/contracts".
+ParserError: Source "lib/forge-std/src/Test.sol" not found: File not found. Searched the following locations: "/engagement/repo/contracts".
+ --> test/unit/Counter.t.sol:4:1:
+  |
+4 | import {Test} from "forge-std/Test.sol";
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[stage-02] FAIL: forge build #1 failed
+
