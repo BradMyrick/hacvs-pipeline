@@ -51,14 +51,20 @@ RUN set -eux; \
     chmod +x /usr/local/bin/solc; \
     solc --version
 
-# --- Foundry (foundryup at pinned stable release) ------------------------------
+# --- Foundry (foundryup bootstrap + pinned stable release) --------------------
+# NOTE: foundry.paradigm.xyz is now the foundryup *bootstrap*: it installs only
+# the foundryup tool. The pinned toolchain comes from `foundryup --install`.
 RUN set -eux; \
     curl -fsSL https://foundry.paradigm.xyz -o /tmp/foundryup.sh; \
     if [ "${FOUNDRYUP_SHA256}" != "UNPINNED" ]; then \
       echo "${FOUNDRYUP_SHA256}  /tmp/foundryup.sh" | sha256sum -c -; \
     else echo "!! WARN: foundryup UNPINNED — run make pin"; fi; \
-    bash /tmp/foundryup.sh -i "${FOUNDRY_VERSION}" || \
-      bash /tmp/foundryup.sh -v "${FOUNDRY_VERSION}"; \
+    bash /tmp/foundryup.sh; \
+    export PATH="/root/.foundry/bin:${PATH}"; \
+    foundryup --install "${FOUNDRY_VERSION}"; \
+    test -x /root/.foundry/bin/forge; \
+    test -x /root/.foundry/bin/cast; \
+    test -x /root/.foundry/bin/anvil; \
     ln -s /root/.foundry/bin/forge /usr/local/bin/forge; \
     ln -s /root/.foundry/bin/cast  /usr/local/bin/cast; \
     ln -s /root/.foundry/bin/anvil /usr/local/bin/anvil; \
