@@ -342,6 +342,156 @@
       "forced": false,
       "commit": "ccc8f41ebdcf5e51a8f1e3c511780116f70e11f3",
       "timestamp": "2026-11-05T22:38:47+00:00"
+    },
+    {
+      "stage": 3,
+      "stage_name": "spec_linting_and_static_analysis",
+      "cadence": "pr_commit_tier",
+      "decision": "NO_GO",
+      "criteria": "Zero unsuppressed static warnings; 100% of suppression entries cryptographically signed and structurally valid.",
+      "failures": [
+        "runner exit code 1"
+      ],
+      "evidence": [
+        "artifacts/static-analysis-summary.json",
+        "artifacts/slither-report.json",
+        "artifacts/slither-report.sarif",
+        "artifacts/aderyn-report.sarif",
+        "artifacts/slither-checklist.md"
+      ],
+      "details": {
+        "totals": {
+          "total": 6,
+          "suppressed": 0,
+          "unsuppressed": {
+            "critical": 0,
+            "high": 0,
+            "medium": 0,
+            "low": 5,
+            "info": 1
+          },
+          "by_engine": {
+            "slither": 1,
+            "aderyn": 5
+          }
+        },
+        "invalid_suppressions": [],
+        "engines": {
+          "slither": {
+            "report_present": true,
+            "findings": 1
+          },
+          "aderyn": {
+            "report_present": true,
+            "findings": 5
+          }
+        },
+        "suppression_count": 0
+      },
+      "runner_exit": 1,
+      "forced": false,
+      "commit": "08c5c4a9b0f4ccf06b5bab17f6061e0c4b7a2560",
+      "timestamp": "2026-11-05T22:39:59+00:00"
+    },
+    {
+      "stage": 3,
+      "stage_name": "spec_linting_and_static_analysis",
+      "cadence": "pr_commit_tier",
+      "decision": "GO",
+      "criteria": "Zero unsuppressed static warnings; 100% of suppression entries cryptographically signed and structurally valid.",
+      "failures": [],
+      "evidence": [
+        "artifacts/static-analysis-summary.json",
+        "artifacts/slither-report.json",
+        "artifacts/slither-report.sarif",
+        "artifacts/aderyn-report.sarif",
+        "artifacts/slither-checklist.md"
+      ],
+      "details": {
+        "totals": {
+          "total": 6,
+          "suppressed": 0,
+          "unsuppressed": {
+            "critical": 0,
+            "high": 0,
+            "medium": 0,
+            "low": 5,
+            "info": 1
+          },
+          "by_engine": {
+            "slither": 1,
+            "aderyn": 5
+          }
+        },
+        "invalid_suppressions": [],
+        "engines": {
+          "slither": {
+            "report_present": true,
+            "findings": 1
+          },
+          "aderyn": {
+            "report_present": true,
+            "findings": 5
+          }
+        },
+        "suppression_count": 0
+      },
+      "runner_exit": 0,
+      "forced": false,
+      "commit": "08c5c4a9b0f4ccf06b5bab17f6061e0c4b7a2560",
+      "timestamp": "2026-11-05T22:40:46+00:00"
+    },
+    {
+      "stage": 4,
+      "stage_name": "event_completeness_and_indexing_verification",
+      "cadence": "pr_commit_tier",
+      "decision": "NO_GO",
+      "criteria": "Zero missing events on state-modifying functions; all primary entity identifiers correctly indexed.",
+      "failures": [
+        "1 function(s) mutate critical state without emitting: Counter. (['owner'])"
+      ],
+      "evidence": [
+        "artifacts/EVENT_EMISSION_AUDIT.json",
+        "missing-event: Counter."
+      ],
+      "details": {
+        "contracts": 1,
+        "functions_audited": 3,
+        "critical_writes": 1,
+        "missing_event_failures": 1,
+        "indexing_warnings": 0,
+        "suppressed": 0
+      },
+      "runner_exit": 0,
+      "forced": false,
+      "commit": "08c5c4a9b0f4ccf06b5bab17f6061e0c4b7a2560",
+      "timestamp": "2026-11-05T22:41:00+00:00"
+    },
+    {
+      "stage": 4,
+      "stage_name": "event_completeness_and_indexing_verification",
+      "cadence": "pr_commit_tier",
+      "decision": "NO_GO",
+      "criteria": "Zero missing events on state-modifying functions; all primary entity identifiers correctly indexed.",
+      "failures": [
+        "1 function(s) mutate critical state without emitting: Counter.constructor (['owner'])"
+      ],
+      "evidence": [
+        "artifacts/EVENT_EMISSION_AUDIT.json",
+        "missing-event: Counter.constructor"
+      ],
+      "details": {
+        "contracts": 1,
+        "functions_audited": 3,
+        "critical_writes": 1,
+        "missing_event_failures": 1,
+        "indexing_warnings": 0,
+        "suppressed": 0
+      },
+      "runner_exit": 0,
+      "forced": false,
+      "commit": "67bf8856a786e26f897a8e908c186e06218a3f01",
+      "timestamp": "2026-11-05T22:41:16+00:00"
     }
   ],
   "overall": {

@@ -12,9 +12,7 @@ fail() { echo "[stage-08] FAIL: $*" | tee "$ART/stage-08-failures.txt" >&2; stag
 
 cd "$TARGET" || { fail "target/ missing"; exit 1; }
 
-if ! compgen -G "out/build-info/*.json" > /dev/null; then
-  forge build --build-info --force || fail "forge build failed"
-fi
+forge build --build-info --force || fail "forge build failed"
 
 note "extracting access matrix from ASTs"
 python3 /pipeline/tools/access-matrix/access_matrix.py \

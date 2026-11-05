@@ -1,0 +1,38 @@
+[stage-04] building fresh build-info for AST extraction (if absent)
+[stage-04] extracting mutation graph + event emission audit
+[event-audit] contracts=1 functions=3 critical_writes=1 missing=1 index_warnings=0 suppressed=0
+[stage-04] slither cross-check (event detectors recorded)
+'forge clean' running (wd: /engagement/target)
+'forge config --json' running
+'forge build --build-info --deny never --skip ./test/** ./script/** --force' running (wd: /engagement/target)
+[stage-04] summary:
+{
+  "contracts": 1,
+  "functions_audited": 3,
+  "critical_writes": 1,
+  "missing_event_failures": 1,
+  "indexing_warnings": 0,
+  "suppressed": 0
+}
+[stage-04] AiWrangler MCP note: the pipeline agent triages the mutation graph via the
+[stage-04] aiwrangler MCP server (0.1.5) and acknowledges human-severity findings;
+[stage-04] acknowledgement records are stored in review/aiwrangler-acks.json (stage 13).
+[stage-04] building fresh build-info for AST extraction (if absent)
+[stage-04] extracting mutation graph + event emission audit
+[event-audit] contracts=1 functions=3 critical_writes=1 missing=1 index_warnings=0 suppressed=0
+[stage-04] slither cross-check (event detectors recorded)
+'forge clean' running (wd: /engagement/target)
+'forge config --json' running
+'forge build --build-info --deny never --skip ./test/** ./script/** --force' running (wd: /engagement/target)
+[stage-04] summary:
+{
+  "contracts": 1,
+  "functions_audited": 3,
+  "critical_writes": 1,
+  "missing_event_failures": 1,
+  "indexing_warnings": 0,
+  "suppressed": 0
+}
+[stage-04] AiWrangler MCP note: the pipeline agent triages the mutation graph via the
+[stage-04] aiwrangler MCP server (0.1.5) and acknowledges human-severity findings;
+[stage-04] acknowledgement records are stored in review/aiwrangler-acks.json (stage 13).

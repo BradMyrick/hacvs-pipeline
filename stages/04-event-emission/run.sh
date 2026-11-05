@@ -11,10 +11,8 @@ fail() { echo "[stage-04] FAIL: $*" | tee "$ART/stage-04-failures.txt" >&2; stag
 
 cd "$TARGET" || { fail "target/ missing"; exit 1; }
 
-note "building fresh build-info for AST extraction (if absent)"
-if ! compgen -G "out/build-info/*.json" > /dev/null; then
-  forge build --build-info --force || fail "forge build for AST failed"
-fi
+note "building fresh build-info for AST extraction (always — stale ASTs are false evidence)"
+forge build --build-info --force || fail "forge build for AST failed"
 
 note "extracting mutation graph + event emission audit"
 python3 /pipeline/tools/event-audit/event_audit.py \

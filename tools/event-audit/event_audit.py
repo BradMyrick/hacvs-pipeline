@@ -202,7 +202,7 @@ class Audit:
                 if critical and not emits:
                     missing.append({
                         "contract": contract["name"], "source": contract["source"],
-                        "function": fn.get("name", "?"),
+                        "function": fn.get("name") or "constructor",
                         "writes": sorted(critical),
                         "categories": sorted({c for v in critical
                                               for c in (self.state_vars_by_name.get(v, {}).get("categories") or [])}),
@@ -213,7 +213,7 @@ class Audit:
                         for params in self.events.get(ev, []):
                             if not self._event_has_indexed_identity(params):
                                 warnings.append({
-                                    "contract": contract["name"], "function": fn.get("name", "?"),
+                                    "contract": contract["name"], "function": fn.get("name") or "constructor",
                                     "event": ev,
                                     "issue": "no indexed identity topic (actor/target address, id)",
                                 })

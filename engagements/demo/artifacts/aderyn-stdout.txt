@@ -28,6 +28,6 @@ Running 88 detectors
 Detectors run, printing report.
 Report printed to /engagement/artifacts/aderyn-report.sarif
 
-Aderyn saved you hours of headaches.
-☕ Buy us a virtual coffee with a GitHub star:
+✔  Done! Fast, clean, effective.
+⭐ Support the project with a star:
 https://github.com/Cyfrin/aderyn

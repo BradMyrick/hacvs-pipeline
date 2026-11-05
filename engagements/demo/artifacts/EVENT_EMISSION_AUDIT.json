@@ -1,0 +1,56 @@
+{
+  "summary": {
+    "contracts": 1,
+    "functions_audited": 3,
+    "critical_writes": 1,
+    "missing_event_failures": 1,
+    "indexing_warnings": 0,
+    "suppressed": 0
+  },
+  "missing_events": [
+    {
+      "contract": "Counter",
+      "source": "src/Counter.sol",
+      "function": "constructor",
+      "writes": [
+        "owner"
+      ],
+      "categories": [
+        "ownership"
+      ]
+    }
+  ],
+  "indexing_warnings": [],
+  "mutation_graph": {
+    "src/Counter.sol::Counter": {
+      "": {
+        "writes": [
+          "owner"
+        ],
+        "critical_writes": [
+          "owner"
+        ],
+        "emits": []
+      },
+      "setNumber": {
+        "writes": [
+          "number"
+        ],
+        "critical_writes": [],
+        "emits": [
+          "NumberSet"
+        ]
+      },
+      "increment": {
+        "writes": [
+          "number"
+        ],
+        "critical_writes": [],
+        "emits": [
+          "NumberSet"
+        ]
+      }
+    }
+  },
+  "suppressed": []
+}
