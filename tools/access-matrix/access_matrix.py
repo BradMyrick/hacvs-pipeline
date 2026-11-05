@@ -74,9 +74,18 @@ def extract(build_info_dir: Path) -> list[dict]:
                     continue
                 if (node.get("kind") or "contract") != "contract":
                     continue
+                # Protocol surface only: src/** excluding mocks. Interface
+                # declarations (unimplemented bodies) and constructors are not
+                # access-control entry points.
+                if not src.startswith("src/") or "/mocks/" in src:
+                    continue
                 cname = node.get("name", "?")
                 for fn in node.get("nodes", []):
                     if fn.get("nodeType") != "FunctionDefinition":
+                        continue
+                    if fn.get("kind") == "constructor":
+                        continue
+                    if fn.get("implemented", True) is False:
                         continue
                     vis = fn.get("visibility", "internal")
                     if vis not in ("public", "external"):
@@ -99,12 +108,35 @@ def extract(build_info_dir: Path) -> list[dict]:
                         (type_str(p.get("typeName")) or "?")
                         for p in (fn.get("parameters", {}) or {}).get("parameters", [])
                     ]
+                    # proper AST walk: BinaryExpression comparing msg.sender
+                    # to a named const (immutable/ state var) with != (or
+                    # negated ==) guards — the registry-gate pattern.
+                    def _id_name(n):
+                        return (n or {}).get("name", "") if (n or {}).get("nodeType") == "Identifier" else ""
+                    sender_guard = []
+                    stack = [fn.get("body", {})]
+                    while stack:
+                        n = stack.pop()
+                        if isinstance(n, dict):
+                            if n.get("nodeType") == "BinaryExpression" and n.get("operator") == "!=":
+                                l, r = _id_name(n.get("leftExpression")), _id_name(n.get("rightExpression"))
+                                if l == "msg.sender" and r:
+                                    sender_guard.append((r, ""))
+                                elif r == "msg.sender" and l:
+                                    sender_guard.append((l, ""))
+                            stack.extend(v for v in n.values() if isinstance(v, (dict, list)))
+                        elif isinstance(n, list):
+                            stack.extend(n)
                     state_changing = fn.get("stateMutability", "nonpayable") not in ("view", "pure")
                     # require-based auth sniff: identifier named *role*/owner in a require call
                     body_text = json.dumps(fn.get("body", {}))
                     require_auth = bool(re.search(r'"\s*(not\s+)?(owner|role|admin|authorized|paused)',
                                                   body_text, re.I)) and "require(" in body_text
                     roles = classify_role(mods, require_auth and state_changing)
+                    if sender_guard and state_changing:
+                        who = sender_guard[0][0]
+                        roles = sorted(set(roles + [f"SENDER-CHECK({who})"])
+                                       - {"PUBLIC"}) or ["PUBLIC"]
                     rows.append({
                         "contract": cname,
                         "source": src,
@@ -162,7 +194,7 @@ def generate_harness(rows: list[dict], target_contract: str | None) -> str:
         if not r["state_changing"]:
             continue
         args = [zero_arg(t) for t in r["param_types"]]
-        fn_name = f"matrix_{r['contract']}_{r['function']}".replace("[", "_").replace("]", "")
+        fn_name = f"test_matrix_{r['contract']}_{r['function']}".replace("[", "_").replace("]", "")
         if all(a is not None for a in args):
             automated.append((fn_name, r, args))
         else:
