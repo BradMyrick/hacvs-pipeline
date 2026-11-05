@@ -19,9 +19,9 @@ help:
 build:
 	$(HACVSP) doctor --allow-missing-images || true
 	@echo "==> building tools image (versions pinned via docker/pins.env)"
-	docker compose --env-file docker/pins.env -f docker/compose.yaml build tools
+	docker compose --project-directory . --env-file docker/pins.env -f docker/compose.yaml build tools
 	@echo "==> building kontrol image"
-	docker compose --env-file docker/pins.env -f docker/compose.yaml build kontrol || \
+	docker compose --project-directory . --env-file docker/pins.env -f docker/compose.yaml build kontrol || \
 		echo "!! kontrol image build failed — stage 12 will fail closed until pinned (see docker/pins.env KONTROL_IMAGE)"
 
 pin:

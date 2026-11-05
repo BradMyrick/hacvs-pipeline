@@ -37,7 +37,8 @@ def list_engagements() -> list[str]:
         return []
     return sorted(
         d.name for d in ENGAGEMENTS.iterdir()
-        if d.is_dir() and (d / "engagement.json").exists()
+        if d.is_dir() and d.name != "_template"
+        and (d / "engagement.json").exists()
     )
 
 

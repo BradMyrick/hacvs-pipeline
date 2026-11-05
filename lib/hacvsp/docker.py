@@ -24,6 +24,11 @@ COMPOSE = REPO_ROOT / "docker" / "compose.yaml"
 def _compose_base(eng_dir: Path) -> list[str]:
     return [
         "docker", "compose",
+        # compose file lives in docker/; all its relative paths (build context,
+        # volume mounts) are written repo-root-relative, so pin the project
+        # directory explicitly or they resolve against docker/ (the doubled
+        # `docker/docker` failure mode).
+        "--project-directory", str(REPO_ROOT),
         "--env-file", str(PINS_ENV),
         "-f", str(COMPOSE),
     ]
