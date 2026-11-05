@@ -12,7 +12,12 @@ RUN set -eux; \
     rm -rf /var/lib/apt/lists/*
 
 # foundry/kontrol binaries are preinstalled in the base image and on PATH.
-RUN kontrol --version || true
+# NOTE: kontrol is a pip --user install under /home/user and ONLY works as the
+# base image's `user` account (uid 1010); as root the vendored typing.py
+# shadows the stdlib and every invocation tracebacks.
+ENV HOME=/home/user
+USER user
+RUN kontrol version || true
 
 WORKDIR /engagement
 ENTRYPOINT ["/bin/bash"]

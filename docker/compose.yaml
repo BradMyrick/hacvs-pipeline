@@ -90,6 +90,7 @@ services:
   stage-12:
     <<: *stage-common
     image: ${KONTROL_IMAGE}
+    user: "1010:1010"
     command: ["/bin/bash", "/pipeline/stages/12-evm-theorem-proving/run.sh"]
     volumes:
       - ${ENGAGEMENT_DIR:-./engagements/_template}:/engagement

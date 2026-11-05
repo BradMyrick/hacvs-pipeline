@@ -40,6 +40,24 @@ def run_stage(eng_dir: Path, n: int, detach: bool = False) -> int:
     env = dict(os.environ)
     env["ENGAGEMENT_DIR"] = str(eng_dir)
 
+    if n == 12:
+        # Kontrol runs as the image's uid 1010 — widen permissions on the
+        # pipeline-owned engagement workspace so it can write evidence.
+        import stat
+        for p in eng_dir.rglob("*"):
+            try:
+                if p.is_dir():
+                    p.chmod(p.stat().st_mode | stat.S_IROTH | stat.S_IWOTH | stat.S_IXOTH)
+                else:
+                    p.chmod(p.stat().st_mode | stat.S_IROTH | stat.S_IWOTH)
+            except OSError:
+                pass
+        try:
+            eng_dir.chmod(eng_dir.stat().st_mode | stat.S_IROTH | stat.S_IWOTH | stat.S_IXOTH)
+        except OSError:
+            pass
+        print("    (stage 12: engagement workspace permissions widened for uid 1010)")
+
     cmd = _compose_base(eng_dir)
     if "HACVSP_INV_RUNS" in env:
         pass  # forwarded automatically via compose interpolation
