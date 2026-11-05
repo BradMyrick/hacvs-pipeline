@@ -51,7 +51,7 @@ def cmd_init(args) -> None:
 
 def cmd_audit(args) -> None:
     name = args.name or Path(args.repo.rstrip("/")).name
-    eng_mod.create(name, args.repo, args.commit)
+    eng_mod.create(name, args.repo, args.commit, subdir=args.subdir)
 
 
 def _gate_eval(eng_dir: Path, n: int) -> dict:
@@ -210,6 +210,10 @@ def cmd_report(args) -> None:
     print(f"==> draft rendered: {out}")
 
 
+def cmd_repin(args) -> None:
+    eng_mod.repin(args.engagement, args.commit)
+
+
 def cmd_list(args) -> None:
     for s in eng_mod.list_engagements():
         print(s)
@@ -231,6 +235,8 @@ def main(argv=None) -> None:
     sp.add_argument("repo")
     sp.add_argument("--commit")
     sp.add_argument("--name")
+    sp.add_argument("--subdir", default=None,
+                    help="monorepo path to the Foundry root, e.g. contracts/")
     sp.set_defaults(fn=cmd_audit)
 
     sp = sub.add_parser("stage", help="run stage N + gate")
@@ -270,6 +276,11 @@ def main(argv=None) -> None:
     sp = sub.add_parser("report", help="render SECURITY_ASSURANCE.md draft")
     sp.add_argument("--engagement", required=True)
     sp.set_defaults(fn=cmd_report)
+
+    sp = sub.add_parser("repin", help="move engagement to a new target commit")
+    sp.add_argument("--engagement", required=True)
+    sp.add_argument("--commit", default=None)
+    sp.set_defaults(fn=cmd_repin)
 
     sp = sub.add_parser("list", help="list engagements")
     sp.set_defaults(fn=cmd_list)

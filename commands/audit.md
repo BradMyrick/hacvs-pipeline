@@ -11,6 +11,11 @@ methodology against the target repo: **$ARGUMENTS**
 
 1. **Resolve the target.** If $ARGUMENTS is a local path, use it; if a URL,
    plan to clone. Confirm the commit to audit with the user (default: HEAD).
+   Layout rules: the target must be a Foundry root (`foundry.toml` + `src/` +
+   `test/`). For monorepos with the Foundry project in a subdirectory, pass
+   `--subdir <path>` (e.g. `contracts/`). Bare .sol folders need a
+   `/hacvsp-init` scaffold first. cwd is irrelevant — commands resolve via
+   the workstation root.
 2. **Intake — ask the user now** (record answers verbatim in
    `engagements/<slug>/intake.md`, mirror into `engagement.json`):
    proxy architecture(s), applicable ERCs, core contracts, external

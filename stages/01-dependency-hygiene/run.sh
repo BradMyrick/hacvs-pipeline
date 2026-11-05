@@ -7,7 +7,7 @@ TARGET="$ENG/target"; ART="$ENG/artifacts"; LOG="$ENG/logs"
 mkdir -p "$ART" "$LOG"
 stage_fail=0
 note() { echo "[stage-01] $*"; }
-fail() { echo "[stage-01] FAIL: $*" | tee "$ART/stage-01-failures.txt" >&2; stage_fail=1; }
+fail() { echo "[stage-01] FAIL: $*" | tee "$ART/stage-01-failures.txt" >&2; exit 1; }
 
 cd "$TARGET" || { fail "target/ missing"; exit 1; }
 

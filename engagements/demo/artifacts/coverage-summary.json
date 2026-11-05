@@ -1,0 +1,45 @@
+{
+  "line_pct": 20.31,
+  "branch_pct": 20.0,
+  "line_hit": 13,
+  "line_found": 64,
+  "branch_hit": 1,
+  "branch_found": 5,
+  "thresholds": {
+    "line": 95.0,
+    "branch": 95.0
+  },
+  "below_threshold": true,
+  "per_file": {
+    "src/Counter.sol": {
+      "LF": 13,
+      "LH": 13,
+      "BRF": 1,
+      "BRH": 1
+    },
+    "test/invariant/Actors.sol": {
+      "LF": 13,
+      "LH": 0,
+      "BRF": 1,
+      "BRH": 0
+    },
+    "test/invariant/Handler.sol": {
+      "LF": 6,
+      "LH": 0,
+      "BRF": 0,
+      "BRH": 0
+    },
+    "test/invariant/InvariantTest.t.sol": {
+      "LF": 1,
+      "LH": 0,
+      "BRF": 0,
+      "BRH": 0
+    },
+    "test/invariant/ReentrancyReceiver.sol": {
+      "LF": 31,
+      "LH": 0,
+      "BRF": 3,
+      "BRH": 0
+    }
+  }
+}

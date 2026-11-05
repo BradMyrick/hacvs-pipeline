@@ -4,7 +4,8 @@ engagements/*/.env
 *.pem
 
 # Engagement target repos (fetched reproducibly; URL+commit recorded in engagement.json)
-engagements/*/target/
+engagements/*/target
+engagements/*/repo/
 
 # Foundry / build outputs inside engagements and template scratch
 out/

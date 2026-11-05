@@ -1,0 +1,11 @@
+{
+  "submodule_issues": 0,
+  "floating_dependencies": 0,
+  "trivy": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "total": 0
+  },
+  "suppressed": []
+}

@@ -49,7 +49,7 @@ def path(slug: str) -> Path:
     return p
 
 
-def create(name: str, repo: str, commit: str | None = None) -> Path:
+def create(name: str, repo: str, commit: str | None = None, subdir: str | None = None) -> Path:
     slug = slugify(name)
     eng = ENGAGEMENTS / slug
     if eng.exists():
@@ -64,14 +64,31 @@ def create(name: str, repo: str, commit: str | None = None) -> Path:
         (eng / ".env").write_text(env_example.read_text())
         os.chmod(eng / ".env", 0o600)
 
-    target = eng / "target"
-    print(f"==> cloning {repo} (recursive submodules) into {target}")
+    repo_dir = eng / "repo"
+    print(f"==> cloning {repo} (recursive submodules) into {repo_dir}")
     subprocess.run(
-        ["git", "clone", "--recurse-submodules", repo, str(target)],
+        ["git", "clone", "--recurse-submodules", repo, str(repo_dir)],
         check=True,
     )
+    if subdir:
+        sub = repo_dir / subdir
+        if not sub.is_dir():
+            raise FileNotFoundError(
+                f"--subdir {subdir!r} not found in repo "
+                f"(available: {', '.join(d.name for d in repo_dir.iterdir() if d.is_dir())})"
+            )
+        # target symlinks into the clone: every stage runner and git command
+        # keeps working (git resolves the physical path up to repo/.git)
+        target = eng / "target"
+        target.symlink_to(f"repo/{subdir}", target_is_directory=True)  # relative: must resolve inside the container mount too
+        workdir = sub
+        print(f"==> engagement targets monorepo subdir: {subdir}")
+    else:
+        target = eng / "target"
+        target.symlink_to("repo", target_is_directory=True)  # relative, same reason
+        workdir = repo_dir
     if commit:
-        subprocess.run(["git", "-C", str(target), "checkout", commit], check=True)
+        subprocess.run(["git", "-C", str(workdir), "checkout", commit], check=True)
     # Record the immutable pin
     sha = subprocess.run(
         ["git", "-C", str(target), "rev-parse", "HEAD"],
@@ -82,7 +99,7 @@ def create(name: str, repo: str, commit: str | None = None) -> Path:
     meta.update(
         {
             "name": slug,
-            "target": {"repo": repo, "commit": sha},
+            "target": {"repo": repo, "commit": sha, "subdir": subdir},
             "created_at": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
             "spec_version": spec.load_spec()["version"],
         }
@@ -100,3 +117,25 @@ def load_meta(eng_dir: Path) -> dict:
 
 def save_meta(eng_dir: Path, meta: dict) -> None:
     (eng_dir / "engagement.json").write_text(json.dumps(meta, indent=2) + "\n")
+
+
+def repin(slug: str, commit: str | None = None) -> Path:
+    """Move an engagement to a new target commit (fetch + checkout + submodules)."""
+    eng = path(slug)
+    repo_dir = eng / "repo" if (eng / "repo").exists() else eng / "target"
+    subprocess.run(["git", "-C", str(repo_dir), "fetch", "--recurse-submodules", "origin"], check=True)
+    if commit:
+        subprocess.run(["git", "-C", str(repo_dir), "checkout", commit], check=True)
+    subprocess.run(
+        ["git", "-C", str(repo_dir), "submodule", "update", "--init", "--recursive"],
+        check=True,
+    )
+    sha = subprocess.run(
+        ["git", "-C", str(repo_dir), "rev-parse", "HEAD"],
+        capture_output=True, text=True, check=True,
+    ).stdout.strip()
+    meta = load_meta(eng)
+    meta["target"]["commit"] = sha
+    save_meta(eng, meta)
+    print(f"==> engagement {slug} re-pinned at {sha}")
+    return eng

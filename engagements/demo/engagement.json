@@ -8,8 +8,12 @@
   "spec_version": "v0.1.0",
   "applicability": {
     "proxy_architectures": [],
-    "erc_standards": [],
-    "core_contracts": [],
+    "erc_standards": [
+      "NONE"
+    ],
+    "core_contracts": [
+      "Counter"
+    ],
     "fork_tests_required": true,
     "fuzz_engines": [
       "forge",
