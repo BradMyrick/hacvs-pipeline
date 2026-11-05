@@ -51,7 +51,7 @@ m = manual.read_text() if manual.exists() else ""
 uncovered = []
 for r in rows:
     fname = f"test_matrix_{r['contract']}_{r['function']}".replace("[", "_").replace("]", "")
-    if f"function test_{fname}" not in h and f"function test_{fname}" not in m:
+    if f"function {fname}" not in h and f"function {fname}" not in m:
         uncovered.append(f"{r['contract']}.{r['function_signature']}")
 summary = {"rows": len(rows), "uncovered": uncovered,
            "concordant": not uncovered}
