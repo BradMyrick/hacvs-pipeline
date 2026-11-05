@@ -85,3 +85,24 @@ logs. Push it; the bundle signature (`cosign verify-blob --key <pub>` over
 - Tool version bumps = spec changes: edit SPEC.json + pins.env together;
   `make gates` regenerates gates.json; `make verify` must stay GO.
 - Custom tools are stdlib-Python with unit tests: `make test`.
+
+## 8. Troubleshooting
+
+**`apt-get update` all-`Ign` / `Unable to locate package` during `make build`,
+or `Temporary failure in name resolution` in stage containers.**
+Hosts running Tailscale (MagicDNS) hand Docker containers resolvers that never
+answer from the docker bridge — container DNS fails completely while the host
+works. HACVSP mitigates both sides in `docker/compose.yaml`:
+- builds run with `network: host` (downloads use host DNS; every artifact is
+  sha256/digest-pinned, so hermeticity doesn't depend on build-network isolation)
+- runtime stage containers pin `dns: [1.1.1.1, 9.9.9.9]`
+The cleaner global fix (all containers, no per-project config) is
+`/etc/docker/daemon.json`: `{"dns": ["1.1.1.1", "9.9.9.9"]}` + daemon restart.
+
+**`resolve <path> lstat ... docker/docker: no such file`** — compose invoked
+without `--project-directory` (paths resolve against the compose file's own
+directory). All hacvsp/Makefile invocations pass it; keep it that way.
+
+**Kontrol base digest fails to resolve at build** — drop the `@sha256:` suffix
+from `KONTROL_BASE` in compose and verify via `docker image inspect
+RepoDigests` recorded by `make pin` instead (doctor enforces it equally).

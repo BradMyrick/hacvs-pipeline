@@ -8,6 +8,11 @@ name: hacvsp
 x-stage-common: &stage-common
   image: ${TOOLS_IMAGE}
   working_dir: /engagement
+  # Explicit DNS: hosts running Tailscale/MagicDNS hand containers resolvers
+  # that never answer from the docker bridge (total resolution failure).
+  dns:
+    - 1.1.1.1
+    - 9.9.9.9
   volumes:
     - ${ENGAGEMENT_DIR:-./engagements/_template}:/engagement
     - ./:/pipeline:ro
@@ -22,6 +27,10 @@ services:
     build:
       context: .
       dockerfile: docker/hacvsp-tools.Dockerfile
+      # host network for BUILD only: apt/pip/npm/downloads use the host's
+      # working DNS; every artifact remains sha256/digest-pinned, so the
+      # hermetic guarantee does not depend on build-network isolation.
+      network: host
       args:
         TOOLS_BASE: ${BASE_TOOLS_IMAGE}@${BASE_TOOLS_DIGEST}
         SOLC_VERSION: ${SOLC_VERSION}
@@ -53,6 +62,7 @@ services:
     build:
       context: .
       dockerfile: docker/kontrol.Dockerfile
+      network: host
       args:
         KONTROL_BASE: ${BASE_KONTROL_IMAGE}:${BASE_KONTROL_TAG}@${BASE_KONTROL_DIGEST}
     image: ${KONTROL_IMAGE}
