@@ -70,13 +70,21 @@ RUN set -eux; \
     ln -s /root/.foundry/bin/anvil /usr/local/bin/anvil; \
     forge --version
 
-# --- Python tooling (pip, version-pinned) -------------------------------------
+# --- Python tooling (isolated venvs: mythril's pinned legacy deps conflict
+#     with slither's modern dependency tree — each analyzer gets its own env) --
 RUN set -eux; \
-    pip install --no-cache-dir \
-      "slither-analyzer==${SLITHER_VERSION}" \
-      "mythril==${MYTHRIL_VERSION}" \
-      "halmos==${HALMOS_VERSION}"; \
-    slither --version; halmos --version || true
+    python3 -m venv /opt/venv-slither; \
+    /opt/venv-slither/bin/pip install --no-cache-dir "slither-analyzer==${SLITHER_VERSION}"; \
+    python3 -m venv /opt/venv-mythril; \
+    /opt/venv-mythril/bin/pip install --no-cache-dir "mythril==${MYTHRIL_VERSION}"; \
+    python3 -m venv /opt/venv-halmos; \
+    /opt/venv-halmos/bin/pip install --no-cache-dir "halmos==${HALMOS_VERSION}"; \
+    ln -s /opt/venv-slither/bin/slither /usr/local/bin/slither; \
+    for extra in /opt/venv-slither/bin/slither-*; do ln -s "$extra" /usr/local/bin/; done; \
+    ln -s /opt/venv-mythril/bin/myth /usr/local/bin/myth; \
+    ln -s /opt/venv-mythril/bin/mythril /usr/local/bin/mythril || true; \
+    ln -s /opt/venv-halmos/bin/halmos /usr/local/bin/halmos; \
+    slither --version; myth version || true; halmos --version || true
 
 # --- Node tooling (npm, version-pinned) ---------------------------------------
 RUN set -eux; \
