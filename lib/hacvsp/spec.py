@@ -162,6 +162,29 @@ def verify_concordance() -> list[str]:
     if "aiwrangler_mcp" not in pinned:
         failures.append("SPEC.json must list aiwrangler_mcp (MCP server, not CLI)")
 
+    # Build-args concordance: every Dockerfile ARG must be fed by compose.
+    for dockerfile, service in (
+        ("docker/hacvsp-tools.Dockerfile", "tools"),
+        ("docker/kontrol.Dockerfile", "kontrol"),
+    ):
+        df_path = REPO_ROOT / dockerfile
+        if not df_path.exists():
+            failures.append(f"missing {dockerfile}")
+            continue
+        import re as _re
+        args = _re.findall(r"^ARG (\w+)=", df_path.read_text(), _re.M)
+        compose_src = compose
+        for arg in args:
+            # Arg must be passed with a pins.env-interpolated value. Most args
+            # self-reference (${ARG}); *_BASE args compose image@digest from
+            # several pins — so require the key plus any ${VAR} interpolation.
+            m = _re.search(rf"^\s+{arg}: (\S+)$", compose_src, _re.M)
+            if not m or "${" not in m.group(1):
+                failures.append(
+                    f"{service} build does not pass ARG {arg} "
+                    f"(defined in {dockerfile}) — pin would silently default"
+                )
+
     return failures
 
 
