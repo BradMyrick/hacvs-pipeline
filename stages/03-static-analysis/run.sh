@@ -20,7 +20,10 @@ scribble --version 2>/dev/null || fail "scribble unavailable"
 # --- Scribble: parse & validate inline specification annotations
 note "scribble annotation instrumentation (spec parsing)"
 mkdir -p /tmp/scribble-out
-if scribble src --output-mode flat --output /tmp/scribble-out/instrumented.sol \
+SOL_FILES="$(find src -name '*.sol' 2>/dev/null | tr '\n' ' ')"
+if [ -z "$SOL_FILES" ]; then
+  note "no .sol sources under src/ (recorded — not a gate failure)"
+elif scribble $SOL_FILES --output-mode flat --output /tmp/scribble-out/instrumented.sol \
     --instrumentation-metadata-file /tmp/scribble-out/metadata.json \
     > "$ART/scribble-output.txt" 2>&1; then
   note "scribble annotations parsed OK"
