@@ -6,6 +6,10 @@ engagements/*/.env
 # Engagement target repos (fetched reproducibly; URL+commit recorded in engagement.json)
 engagements/*/target
 engagements/*/repo/
+# Real engagements are evidence, not pipeline code — publish each as its own
+# audit repo; only the template ships with the pipeline.
+engagements/*
+!engagements/_template
 
 # Foundry / build outputs inside engagements and template scratch
 out/

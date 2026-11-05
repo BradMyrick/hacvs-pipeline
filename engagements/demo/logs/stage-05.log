@@ -1,8 +1,0 @@
-[stage-05] applicable architectures: none declared
-[stage-05] baseline commit: none (first audit — baseline snapshot recorded)
-[stage-05] extracting current storage layouts (forge inspect)
-[stage-05] layout: Counter
-[stage-05] no baseline commit — current layouts recorded as the baseline for future upgrades
-[stage-05] checking initializer lock on logic contracts
-{"checked": 1, "issues": 0}
-{"duplicate_signatures": 0}

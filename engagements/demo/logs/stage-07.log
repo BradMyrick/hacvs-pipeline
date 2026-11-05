@@ -1,5 +1,0 @@
-[stage-07] forge test (full suite, gas report)
-[stage-07] differential suite
-[stage-07] forge coverage
-{"line_pct": 20.31, "branch_pct": 20.0, "below_threshold": true}
-[stage-07] unit/differential/fork suites complete; coverage summarized

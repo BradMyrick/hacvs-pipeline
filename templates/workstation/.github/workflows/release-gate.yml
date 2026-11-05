@@ -19,7 +19,7 @@ jobs:
           submodules: recursive
       - uses: docker/setup-buildx-action@v3
       - name: Checkout pipeline (digest-pinned)
-        run: git clone https://github.com/kodr-pro/hacvsp /tmp/hacvsp
+        run: git clone https://github.com/BradMyrick/hacvs-pipeline /tmp/hacvsp
       - name: Run stage ${{ matrix.stage }}
         env:
           HACVSP_FORK_RPC: ${{ secrets.HACVSP_FORK_RPC }}
