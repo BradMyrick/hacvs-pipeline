@@ -2,6 +2,7 @@
 # Stage 1 — dependency hygiene & supply-chain verification (PR tier)
 # Gate: zero unreviewed CVEs; all submodules pinned to immutable commits.
 set -uo pipefail
+umask 0000  # container-created evidence stays host-manageable (runners execute as root)
 ENG="${ENGAGEMENT_DIR:-/engagement}"
 TARGET="$ENG/target"; ART="$ENG/artifacts"; LOG="$ENG/logs"
 mkdir -p "$ART" "$LOG"

@@ -3,6 +3,7 @@
 # Gate: all signed attestations, verifiable hashes, suppression tables, and
 #       execution logs committed to the public repository root (engagement root).
 set -uo pipefail
+umask 0000  # container-created evidence stays host-manageable (runners execute as root)
 ENG="${ENGAGEMENT_DIR:-/engagement}"
 TARGET="$ENG/target"; ART="$ENG/artifacts"
 mkdir -p "$ART" "$ENG/signatures"

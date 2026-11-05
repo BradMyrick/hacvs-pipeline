@@ -2,6 +2,7 @@
 # Stage 7 — concrete unit, differential, and fork testing (PR tier)
 # Gate: all tests pass; coverage >= 95% line & branch with approved exceptions.
 set -uo pipefail
+umask 0000  # container-created evidence stays host-manageable (runners execute as root)
 ENG="${ENGAGEMENT_DIR:-/engagement}"
 TARGET="$ENG/target"; ART="$ENG/artifacts"
 mkdir -p "$ART"

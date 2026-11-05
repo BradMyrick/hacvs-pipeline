@@ -2,6 +2,7 @@
 # Stage 5 — storage layout & upgradeability verification (PR tier)
 # Gate: zero storage collisions; initializer protection; selector uniqueness.
 set -uo pipefail
+umask 0000  # container-created evidence stays host-manageable (runners execute as root)
 ENG="${ENGAGEMENT_DIR:-/engagement}"
 TARGET="$ENG/target"; ART="$ENG/artifacts"
 mkdir -p "$ART"

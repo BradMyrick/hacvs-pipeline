@@ -3,6 +3,7 @@
 # THE HUMAN LANE: the Principal Security Engineer (Kodr.pro) is the gate.
 # The runner validates deliverables + signature; the agent drafts, the expert rules.
 set -uo pipefail
+umask 0000  # container-created evidence stays host-manageable (runners execute as root)
 ENG="${ENGAGEMENT_DIR:-/engagement}"
 TARGET="$ENG/target"; ART="$ENG/artifacts"
 mkdir -p "$ART" "$ENG/review"

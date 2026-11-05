@@ -3,6 +3,7 @@
 # Gate: bit-for-bit reproducible bytecode; EIP-170 (24576B runtime) and
 #       EIP-3860 (49152B initcode) limits.
 set -uo pipefail
+umask 0000  # container-created evidence stays host-manageable (runners execute as root)
 ENG="${ENGAGEMENT_DIR:-/engagement}"
 TARGET="$ENG/target"; ART="$ENG/artifacts"
 mkdir -p "$ART"

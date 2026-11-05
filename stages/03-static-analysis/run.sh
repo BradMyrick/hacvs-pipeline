@@ -3,6 +3,7 @@
 # Gate: zero unsuppressed static warnings; 100% of suppression entries
 #       cryptographically signed and structurally valid.
 set -uo pipefail
+umask 0000  # container-created evidence stays host-manageable (runners execute as root)
 ENG="${ENGAGEMENT_DIR:-/engagement}"
 TARGET="$ENG/target"; ART="$ENG/artifacts"
 mkdir -p "$ART"

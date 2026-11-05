@@ -2,6 +2,7 @@
 # Stage 9 — mutation testing (RELEASE tier, long-running, detachable)
 # Gate: >= 90% mutant kill rate; zero unaddressed survivors in core contracts.
 set -uo pipefail
+umask 0000  # container-created evidence stays host-manageable (runners execute as root)
 ENG="${ENGAGEMENT_DIR:-/engagement}"
 TARGET="$ENG/target"; ART="$ENG/artifacts"
 mkdir -p "$ART"

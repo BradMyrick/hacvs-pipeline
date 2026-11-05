@@ -2,6 +2,7 @@
 # Stage 6 — standards compliance & conformance suite (PR tier)
 # Gate: 100% pass across all applicable reference standard compliance suites.
 set -uo pipefail
+umask 0000  # container-created evidence stays host-manageable (runners execute as root)
 ENG="${ENGAGEMENT_DIR:-/engagement}"
 TARGET="$ENG/target"; ART="$ENG/artifacts"
 mkdir -p "$ART"

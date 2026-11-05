@@ -3,6 +3,7 @@
 # Gate: zero unauthorized callers on privileged state transitions;
 #       100% matrix<->test concordance.
 set -uo pipefail
+umask 0000  # container-created evidence stays host-manageable (runners execute as root)
 ENG="${ENGAGEMENT_DIR:-/engagement}"
 TARGET="$ENG/target"; ART="$ENG/artifacts"
 mkdir -p "$ART"

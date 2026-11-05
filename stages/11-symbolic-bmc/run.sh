@@ -2,6 +2,7 @@
 # Stage 11 — symbolic execution & bounded model checking (RELEASE tier)
 # Dual BMC engines (solc SMTChecker + Halmos) + bytecode-level Mythril.
 set -uo pipefail
+umask 0000  # container-created evidence stays host-manageable (runners execute as root)
 ENG="${ENGAGEMENT_DIR:-/engagement}"
 TARGET="$ENG/target"; ART="$ENG/artifacts"
 mkdir -p "$ART"
