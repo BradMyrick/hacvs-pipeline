@@ -77,7 +77,7 @@ python3 - "$TARGET" "$ART" <<'PY' || fail "canonical AST extraction failed"
 import json, pathlib, sys
 target, art = pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2])
 canon = {"sources": {}}
-for bi in sorted(target.glob("out/build-info/*.json")):
+for bi in sorted(target.glob("out-a/build-info/*.json")) or sorted(target.glob("out*/build-info/*.json")):
     data = json.loads(bi.read_text())
     for name, src in (data.get("output", {}).get("sources") or {}).items():
         rel = str(pathlib.Path(name).relative_to(target)) if str(name).startswith(str(target)) else name
@@ -89,7 +89,7 @@ print(f"canonical AST: {len(canon['sources'])} sources")
 PY
 
 # --- Reproducible manifest (hashes of all build artifacts)
-( cd "$TARGET" && find out-a out/build-info -type f | sort \
+( cd "$TARGET" && find out-a -type f | sort \
   | xargs sha256sum ) > "$ART/reproducible-manifest.sha256" \
   || fail "manifest generation failed"
 
