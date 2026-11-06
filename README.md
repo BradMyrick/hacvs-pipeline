@@ -5,7 +5,7 @@
 A fail-closed gated verification system for EVM smart contracts: hermetic
 digest-pinned Docker toolchain, binary GO/NO-GO gates, dual cadences (PR tier
 1–7, release gate 8–14), signed suppression governance, and cryptographic
-attestation of the entire evidence bundle. Certora-free formal layer: **Halmos**
+attestation of the entire evidence bundle. Certora-free formal layer: **hevm**
 (source-level bounded model checking) + **Kontrol/KEVM** (EVM-level theorem
 proving with coverage-enforced non-vacuity). AiWrangler participates as an
 **MCP server** (0.1.5), not a CLI.
@@ -49,7 +49,7 @@ hacvsp stage 1 --engagement <slug>                      # ... through 14
 
 **Release gate** 8 access-control matrix (exhaustive + concordant) ·
 9 mutation ≥90% kill · 10 stateful fuzzing (forge+echidna+medusa, ghost actors
-+ reentrancy sets) · 11 symbolic/BMC (SMTChecker bmc/chc + Halmos + Mythril) ·
++ reentrancy sets) · 11 symbolic/BMC (SMTChecker bmc/chc + hevm + Mythril) ·
 12 Kontrol KEVM theorem proving · 13 **expert** threat model + sign-off ·
 14 cosign attestation + SLSA provenance + Sourcify mapping.
 

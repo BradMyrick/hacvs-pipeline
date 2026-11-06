@@ -30,9 +30,9 @@ Ground truth is `SPEC.json` in the workstation repo (default
 | Tier | Stages | Runs on |
 |---|---|---|
 | PR commit | 1 dependency/supply-chain · 2 deterministic build · 3 static analysis · 4 events · 5 storage/upgrade · 6 ERC conformance · 7 unit/differential/fork (≥95% cov) | every PR |
-| Release gate | 8 access matrix · 9 mutation (≥90% kill) · 10 stateful fuzzing (forge+echidna+medusa) · 11 symbolic/BMC (SMTChecker+Halmos+Mythril) · 12 Kontrol EVM theorem proving · 13 expert review (HUMAN) · 14 attestation & bundle | release |
+| Release gate | 8 access matrix · 9 mutation (≥90% kill) · 10 stateful fuzzing (forge+echidna+medusa) · 11 symbolic/BMC (SMTChecker+hevm+Mythril) · 12 Kontrol EVM theorem proving · 13 expert review (HUMAN) · 14 attestation & bundle | release |
 
-Stage 11/12 note (v0.1.0): Certora is **not** used. Halmos is the primary
+Stage 11/12 note (v0.1.0): Certora is **not** used. hevm is the primary
 source-level BMC engine; Kontrol (KEVM/K Framework, docker-digest-pinned)
 proves Foundry tests at the bytecode level with coverage-enforced non-vacuity.
 

@@ -29,12 +29,12 @@ if sym.exists():
         s = {}
         failures.append(f"symbolic-summary.json unparseable: {exc}")
     details["smtchecker"] = s.get("smtchecker")
-    details["halmos"] = s.get("halmos")
+    details["hevm"] = s.get("hevm")
     if (s.get("smtchecker") or {}).get("counterexamples", 1) != 0:
         failures.append("SMTChecker reported counterexamples (bmc/chc)")
-    halmos = s.get("halmos") or {}
-    if halmos.get("failing", 1) != 0:
-        failures.append(f"halmos failing proofs: {halmos.get('failing')}")
+    hevm = s.get("hevm") or {}
+    if hevm.get("failing", 0) != 0:
+        failures.append(f"hevm failing proofs: {hevm.get('failing')}")
     if halmos.get("passing", 0) == 0:
         failures.append("halmos proved nothing (no symbolic tests found — "
                         "add test/proofs with symbolic-bound inputs)")

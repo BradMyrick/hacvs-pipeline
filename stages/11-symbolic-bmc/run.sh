@@ -26,21 +26,32 @@ SOLVERLESS=0
 grep -q "analysis was not possible" "$ART/smt-build.log" && SOLVERLESS=1
 note "SMTChecker counterexamples: ${CE_COUNT:-0} (solverless-build: ${SOLVERLESS})"
 
-# --- Halmos: primary source-level bounded model checker over Foundry tests
-note "halmos symbolic execution of Foundry tests"
-halmos --loop 3 > "$ART/halmos-results.txt" 2>&1 \
-  || fail "halmos reported failing proofs — see artifacts/halmos-results.txt"
-HALMOS_FAIL=$(grep -cE "Failing tests:|FAILED" "$ART/halmos-results.txt" || true)
-HALMOS_PASS=$(grep -cE "PASS" "$ART/halmos-results.txt" || true)
-note "halmos: passing=${HALMOS_PASS:-0} failing=${HALMOS_FAIL:-0}"
+# --- hevm (argotorg): symbolic execution of the proof corpus
+note "hevm symbolic proofs (test_Proof corpus)"
+if compgen -G "test/proofs/*.t.sol" > /dev/null; then
+  if hevm test --prefix test_Proof > "$ART/hevm-results.txt" 2>&1; then
+    note "hevm: corpus proved"
+    HEVM_PASS=$(grep -cE "PASS|passed" "$ART/hevm-results.txt" || true)
+    HEVM_FAIL=$(grep -cE "FAIL|counterexample" "$ART/hevm-results.txt" || true)
+  else
+    note "hevm reported failures/counterexamples — see artifacts/hevm-results.txt"
+    HEVM_PASS=$(grep -cE "PASS|passed" "$ART/hevm-results.txt" || true)
+    HEVM_FAIL=$(grep -cE "FAIL|counterexample" "$ART/hevm-results.txt" || true)
+    [ "${HEVM_FAIL:-0}" -gt 0 ] && fail "hevm counterexamples in proof corpus — see artifacts/hevm-results.txt"
+    fail "hevm run errored — see artifacts/hevm-results.txt"
+  fi
+else
+  note "no test/proofs/ corpus — hevm skipped (recorded)"
+  HEVM_PASS=0; HEVM_FAIL=0
+fi
 
-python3 - "$ART" "${HALMOS_PASS:-0}" "${HALMOS_FAIL:-0}" "${CE_COUNT:-0}" "$SOLVERLESS" <<'PY'
+python3 - "$ART" "${HEVM_PASS:-0}" "${HEVM_FAIL:-0}" "${CE_COUNT:-0}" "$SOLVERLESS" <<'PY'
 import json, pathlib, sys
 art, p, f, ce = pathlib.Path(sys.argv[1]), *map(int, sys.argv[2:5])
 solverless = bool(int(sys.argv[5]))
 (art / "symbolic-summary.json").write_text(json.dumps({
     "smtchecker": {"counterexamples": ce, "solver_unavailable": solverless},
-    "halmos": {"passing": p, "failing": f},
+    "hevm": {"passing": p, "failing": f},
 }, indent=2) + "\n")
 PY
 
