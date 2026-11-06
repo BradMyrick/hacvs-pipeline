@@ -214,6 +214,42 @@ def cmd_repin(args) -> None:
     eng_mod.repin(args.engagement, args.commit)
 
 
+def cmd_fleet(args) -> None:
+    from . import insights
+    data = insights.fleet_data()
+    if args.json:
+        print(json.dumps(data, indent=2)); return
+    for e in data:
+        print(f"{e['slug']:<20} PR:{e['pr_tier']:<6} REL:{e['release_tier']:<6} "
+              f"{e['stages_go']}G/{e['stages_nogo']}N/{e['stages_pending']}P  {e['last_activity']}")
+
+
+def cmd_findings(args) -> None:
+    from . import insights
+    items = insights.findings_data(args.engagement)
+    if args.json:
+        print(json.dumps(items, indent=2)); return
+    for f in items:
+        print(f"[{f['severity']:<8}] {f['id']:<12} {f['title']}  {f['where']}")
+    if not items:
+        print("(inbox empty)")
+
+
+def cmd_pending(args) -> None:
+    from . import insights
+    p = insights.pending_data(args.engagement)
+    if args.json:
+        print(json.dumps(p, indent=2)); return
+    print(json.dumps(p, indent=2))
+
+
+def cmd_ui(args) -> None:
+    from .ui.server import serve
+    if args.bind not in ("127.0.0.1", "localhost", "::1"):
+        print("!! WARNING: binding off-localhost exposes audit evidence and sign actions")
+    serve(port=args.port, bind=args.bind)
+
+
 def cmd_list(args) -> None:
     for s in eng_mod.list_engagements():
         print(s)
@@ -281,6 +317,25 @@ def main(argv=None) -> None:
     sp.add_argument("--engagement", required=True)
     sp.add_argument("--commit", default=None)
     sp.set_defaults(fn=cmd_repin)
+
+    sp = sub.add_parser("fleet", help="all engagements + rollups (--json)")
+    sp.add_argument("--json", action="store_true")
+    sp.set_defaults(fn=cmd_fleet)
+
+    sp = sub.add_parser("findings", help="triage inbox for an engagement")
+    sp.add_argument("--engagement", required=True)
+    sp.add_argument("--json", action="store_true")
+    sp.set_defaults(fn=cmd_findings)
+
+    sp = sub.add_parser("pending", help="stage-13 ratification queue")
+    sp.add_argument("--engagement", required=True)
+    sp.add_argument("--json", action="store_true")
+    sp.set_defaults(fn=cmd_pending)
+
+    sp = sub.add_parser("ui", help="operator dashboard (localhost web app)")
+    sp.add_argument("--port", type=int, default=8787)
+    sp.add_argument("--bind", default="127.0.0.1")
+    sp.set_defaults(fn=cmd_ui)
 
     sp = sub.add_parser("list", help="list engagements")
     sp.set_defaults(fn=cmd_list)

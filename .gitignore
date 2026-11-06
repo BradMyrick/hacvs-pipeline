@@ -24,3 +24,6 @@ __pycache__/
 
 # OS
 .DS_Store
+
+# quarantined strays — never commit, never delete (deletion policy)
+.trash/

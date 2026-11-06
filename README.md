@@ -20,6 +20,7 @@ SPEC.json ──gates──> hacvsp CLI ──docker(compose)──> stages/01..
 
 ```bash
 make build && make pin && make doctor && make verify   # hermetic setup
+make ui                                            # operator dashboard :8787
 hacvsp audit <repo> --commit <sha> --name <slug>        # engagement
 hacvsp stage 1 --engagement <slug>                      # ... through 14
 # or conversationally:  /audit <repo>   /hacvsp-init   /hacvsp-signoff

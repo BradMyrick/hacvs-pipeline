@@ -54,7 +54,7 @@ class TestAccessMatrix(unittest.TestCase):
             fn_node("exotic", "external", ["uint256[2]"], ["onlyOwner"]),
         ])]))
         harness = am.generate_harness(rows, "Vault")
-        self.assertIn("function matrix_Vault_setFee", harness)
+        self.assertIn("function test_matrix_Vault_setFee", harness)
         self.assertIn("vm.expectRevert();", harness)
         self.assertIn("matrix_Vault_exotic", harness)  # flagged as manual row
 

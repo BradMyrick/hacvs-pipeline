@@ -4,7 +4,7 @@
 SHELL := /bin/bash
 HACVSP := ./bin/hacvsp
 
-.PHONY: help build pin doctor verify gates test install-opencode
+.PHONY: help build pin doctor verify gates test install-opencode ui
 
 help:
 	@echo "HACVSP targets:"
@@ -47,3 +47,6 @@ test:
 
 install-opencode:
 	./install/install-opencode.sh
+
+ui:
+	$(HACVSP) ui
