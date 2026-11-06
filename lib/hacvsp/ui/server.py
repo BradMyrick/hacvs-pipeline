@@ -93,7 +93,12 @@ class UiHandler(BaseHTTPRequestHandler):
                 if doc not in actions.REVIEW_REQUIRED_SECTIONS:
                     return self._err(404, "unknown review doc")
                 p = spec.REPO_ROOT / "engagements" / slug / "review" / doc
-                content = p.read_text() if p.exists() else f"# {doc}\n\n(draft)\n"
+                if not p.exists() or len(p.read_text().strip()) < 60:
+                    try:
+                        actions.regen_draft(slug, doc)  # evidence-drafted on first open
+                    except Exception:
+                        pass
+                content = p.read_text() if p.exists() else f"# {doc}\n"
                 qs = parse_qs(urlparse(self.path).query)
                 return self._ok(render.review_edit_page(
                     slug, doc, content, qs.get("warn", [""])[0]))
@@ -127,9 +132,21 @@ class UiHandler(BaseHTTPRequestHandler):
                                        f.get("note", ""))
                 return self._redirect(base + "/findings", f"rejected → review/FIXTASKS.md")
 
-            if parts[2] == "save" and len(parts) == 4:
+            if parts[2] == "regen-draft" and len(parts) == 4:
                 doc = unquote(parts[3])
-                missing = actions.save_review_doc(slug, doc, f.get("content", ""))
+                if f.get("confirm", [""])[0] != slug:
+                    return self._redirect(base + f"/review/{doc}",
+                                          f"regenerate blocked: type the slug to confirm")
+                actions.regen_draft(slug, doc)
+                return self._redirect(base + f"/review/{doc}",
+                                      "draft regenerated from engagement evidence")
+
+            if parts[2] == "save-workspace" and len(parts) == 4:
+                doc = unquote(parts[3])
+                sections = [f[k] for k in sorted(
+                    (k for k in f if k.startswith("section")),
+                    key=lambda k: int(k[7:]))]
+                missing = actions.save_workspace(slug, doc, sections)
                 warn = ", ".join(missing)
                 return self._redirect(base + f"/review/{doc}",
                                       f"saved. ⚠ missing sections: {warn}" if warn else "saved ✓")

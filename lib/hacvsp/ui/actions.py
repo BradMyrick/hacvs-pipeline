@@ -113,3 +113,31 @@ def run_stage(slug: str, n: int, detach: bool = False) -> None:
         subprocess.Popen(cmd, stdout=lf, stderr=lf, start_new_session=True,
                          cwd=str(spec.REPO_ROOT))
     activity(slug, f"UI action: stage {n} run (detach={detach})")
+
+
+def regen_draft(slug: str, doc: str) -> None:
+    """Regenerate a review doc from engagement evidence (replaces content)."""
+    from . import drafts
+    gen = drafts.DRAFTS.get(doc)
+    if gen is None:
+        raise ValueError(f"no draft generator for {doc}")
+    p = eng_dir(slug) / "review" / doc
+    p.parent.mkdir(parents=True, exist_ok=True)
+    _atomic_write(p, gen(slug))
+    activity(slug, f"REGENERATED draft review/{doc} from evidence")
+
+
+def save_workspace(slug: str, doc: str, sections: list[str]) -> list[str]:
+    """Assemble the doc from section bodies (order preserved on the page)."""
+    parts = []
+    for body in sections:
+        body = body.strip("\n")
+        if body.startswith("## "):
+            parts.append(body)
+        else:
+            # first section is preamble or already has its header stripped
+            parts.append(body)
+    content = "\n\n".join(parts) + "\n"
+    if not content.lstrip().startswith("#"):
+        content = f"# {doc}\n\n{content}"
+    return save_review_doc(slug, doc, content)

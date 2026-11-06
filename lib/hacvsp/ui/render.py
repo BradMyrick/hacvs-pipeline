@@ -187,14 +187,8 @@ stage 13's runner enforces.</p>""")
 
 
 def review_edit_page(slug: str, doc: str, content: str, warning: str = "") -> bytes:
-    warn = f'<div class="flash flash-warn">⚠ missing sections: {esc(warning)}</div>' if warning else ""
-    return base(f"{slug} {doc}", f"""
-<h1>📝 {esc(doc)} — {esc(slug)}</h1>{warn}
-<form method="post" action="/e/{slug}/save/{doc}">
-<textarea name="content" rows="28" style="font-family:ui-monospace,monospace;font-size:.82rem">{esc(content)}</textarea>
-<button>save</button></form>
-<p class="dim">Saved straight to engagements/{esc(slug)}/review/{esc(doc)} — the file the
-stage-13 gate reads. Section warnings are advisory; the gate stays authoritative.</p>""")
+    from .workspace import review_workspace_page
+    return review_workspace_page(slug, doc, content, warning)
 
 
 def bundle_page(slug: str) -> bytes:
