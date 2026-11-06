@@ -20,7 +20,7 @@ note "engines: ${ENGINES} | invariant runs=${INV_RUNS} depth=${INV_DEPTH}"
 if [[ "$ENGINES" == *forge* ]]; then
   note "forge invariant engine"
   forge test --match-contract Invariant \
-    --fuzz-runs "$INV_RUNS" --depth "$INV_DEPTH" \
+    --fuzz-runs "$INV_RUNS" --invariant-depth "$INV_DEPTH" \
     --json > "$ART/invariant-results.ndjson" 2> "$ART/invariant-stderr.txt" \
     || fail "forge invariant run failed (violations or crash — see invariant-results.ndjson)"
 else

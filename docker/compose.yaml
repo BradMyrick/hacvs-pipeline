@@ -76,16 +76,11 @@ services:
   stage-07:
     <<: *stage-common
     command: ["/pipeline/stages/07-unit-diff-fork/run.sh"]
-    environment:
-      - HACVSP_FORK_RPC=${HACVSP_FORK_RPC:-}
   stage-08: { <<: *stage-common, command: ["/pipeline/stages/08-access-control/run.sh"] }
   stage-09: { <<: *stage-common, command: ["/pipeline/stages/09-mutation/run.sh"] }
   stage-10:
     <<: *stage-common
     command: ["/pipeline/stages/10-stateful-fuzzing/run.sh"]
-    environment:
-      - HACVSP_INV_RUNS=${HACVSP_INV_RUNS:-100000}
-      - HACVSP_INV_DEPTH=${HACVSP_INV_DEPTH:-500}
   stage-11: { <<: *stage-common, command: ["/pipeline/stages/11-symbolic-bmc/run.sh"] }
   stage-12:
     <<: *stage-common
