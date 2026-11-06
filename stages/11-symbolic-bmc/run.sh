@@ -46,32 +46,70 @@ PY
 
 # --- Mythril: bytecode-level taint/path analysis
 note "mythril bytecode-level analysis"
-# mythril 0.24.8: -o json to stdout (no --output flag); capture + parse
-myth analyze src \
-  -o jsonv2 \
-  --execution-timeout 600 --solver-timeout 30000 --strategy bfs \
-  > "$ART/mythril-raw.txt" 2>&1 \
-  || note "mythril exited non-zero (issues found or timeout — parsed below)"
+# mythril 0.24.8: foundry loader chokes on forge-1.9 DeployHelper sources;
+# analyze per src file with solc remappings, merge issues.
+MYTH_REMAPS="--base-path . $(grep -vE '^\s*(#|$)' remappings.txt 2>/dev/null | tr '\n' ' ')"
+: > "$ART/mythril-raw.txt"
+for f in $(find src -name '*.sol' | grep -v '/mocks/' | sort); do
+  note "mythril: $f"
+  myth analyze "$f" --solv "${SOLC_VERSION:-0.8.38}" -o jsonv2 \
+    --execution-timeout 420 --solver-timeout 30000 --strategy bfs \
+    --solc-args "$MYTH_REMAPS" >> "$ART/mythril-raw.txt" 2>>"$ART/mythril-stderr-all.txt" \
+    || note "mythril exited non-zero on $f (recorded)"
+  printf '\n' >> "$ART/mythril-raw.txt"
+done
+
 python3 - "$ART" <<'EXTRACT'
 import json, pathlib, sys
 art = pathlib.Path(sys.argv[1])
-raw = (art / "mythil-raw.txt") if (art / "mythil-raw.txt").exists() else (art / "mythril-raw.txt")
-text = raw.read_text()
-# jsonv2 output may embed the JSON after log lines; find first { ... } block
-start = text.find("{")
-try:
-    data = json.loads(text[start:]) if start >= 0 else {}
-except Exception:
-    # try line-wise: last JSON object
-    data = {}
-    for line in text.splitlines():
-        line = line.strip()
-        if line.startswith("{") and line.endswith("}"):
-            try: data = json.loads(line)
-            except Exception: pass
-(art / "mythril-results.json").write_text(json.dumps(data, indent=2) + "\n")
-print(f"[stage-11] mythril issues: {len(data.get('issues', []) or [])}")
+text = (art / "mythril-raw.txt").read_text()
+dec = json.JSONDecoder()
+issues = []
+idx = 0
+while idx < len(text):
+    brace = text.find("{", idx)
+    if brace < 0:
+        break
+    try:
+        obj, end = dec.raw_decode(text, brace)
+        issues.extend(obj.get("issues", []) or [])
+        idx = end
+    except json.JSONDecodeError:
+        idx = brace + 1
+(art / "mythril-results.json").write_text(json.dumps({"issues": issues}, indent=2) + "\n")
+high = [i for i in issues if (i.get("severity") or "").lower() in ("high", "critical")]
+print(f"[stage-11] mythril issues: {len(issues)} (high/critical: {len(high)})")
 EXTRACT
+
+python3 - "$ART" <<'SUMM'
+import json, pathlib, sys
+art = pathlib.Path(sys.argv[1])
+suppressed = set()
+supp = pathlib.Path("/engagement/target/.security-suppressions.json")
+if supp.exists():
+    try:
+        for e in json.loads(supp.read_text()):
+            if e.get("tool") == "mythril":
+                suppressed.add((e.get("finding_id"), str(e.get("file", ""))))
+    except Exception:
+        pass
+data = json.loads((art / "mythril-results.json").read_text())
+issues = data.get("issues", [])
+unmitigated = []
+for i in issues:
+    sev = (i.get("severity") or "").title()
+    if sev not in ("High", "Critical"):
+        continue
+    swc = str(i.get("swc-id") or i.get("check", "?"))
+    src = i.get("source") or {}
+    fname = src.get("filename", "") if isinstance(src, dict) else ""
+    if (swc, "") in suppressed or any(k[0] == swc and k[1] and k[1] in fname for k in suppressed):
+        continue
+    unmitigated.append({"severity": sev, "swc": swc, "title": str(i.get("description", ""))[:100]})
+(art / "mythril-summary.json").write_text(json.dumps(
+    {"total_issues": len(issues), "unmitigated_high_critical": unmitigated}, indent=2) + "\n")
+SUMM
+
 
 python3 - "$ART" <<'PY'
 import json, pathlib, sys

@@ -18,7 +18,8 @@ ARG ECHIDNA_SHA256=UNPINNED
 ARG MEDUSA_VERSION=1.5.1
 ARG MEDUSA_SHA256=UNPINNED
 ARG MYTHRIL_VERSION=0.24.8
-ARG HALMOS_VERSION=0.3.3
+ARG HEVM_VERSION=0.58.0
+ARG HEVM_SHA256=UNPINNED
 ARG SCRIBBLE_VERSION=0.7.10
 ARG GAMBIT_VERSION=1.0.6
 ARG GAMBIT_SHA256=UNPINNED
@@ -80,14 +81,11 @@ RUN set -eux; \
     /opt/venv-slither/bin/pip install --no-cache-dir "slither-analyzer==${SLITHER_VERSION}"; \
     python3 -m venv /opt/venv-mythril; \
     /opt/venv-mythril/bin/pip install --no-cache-dir "mythril==${MYTHRIL_VERSION}"; \
-    python3 -m venv /opt/venv-halmos; \
-    /opt/venv-halmos/bin/pip install --no-cache-dir "halmos==${HALMOS_VERSION}"; \
     ln -s /opt/venv-slither/bin/slither /usr/local/bin/slither; \
     for extra in /opt/venv-slither/bin/slither-*; do ln -s "$extra" /usr/local/bin/; done; \
     ln -s /opt/venv-mythril/bin/myth /usr/local/bin/myth; \
     ln -s /opt/venv-mythril/bin/mythril /usr/local/bin/mythril || true; \
-    ln -s /opt/venv-halmos/bin/halmos /usr/local/bin/halmos; \
-    slither --version; myth version || true; halmos --version || true
+    slither --version; myth version || true
 
 # --- Node tooling (npm, version-pinned) ---------------------------------------
 RUN set -eux; \
@@ -118,6 +116,17 @@ RUN set -eux; \
     else echo "!! WARN: gambit UNPINNED — run make pin"; fi; \
     chmod +x /usr/local/bin/gambit; \
     gambit --version || true
+
+# hevm (symbolic execution of forge tests; argotorg fork — halmos successor)
+RUN set -eux; \
+    curl -fsSL \
+      "https://github.com/argotorg/hevm/releases/download/release/${HEVM_VERSION}/hevm-x86_64-linux" \
+      -o /usr/local/bin/hevm; \
+    if [ "${HEVM_SHA256}" != "UNPINNED" ]; then \
+      echo "${HEVM_SHA256}  /usr/local/bin/hevm" | sha256sum -c -; \
+    else echo "!! WARN: hevm UNPINNED — run make pin"; fi; \
+    chmod +x /usr/local/bin/hevm; \
+    hevm --version
 
 # Echidna
 RUN set -eux; \

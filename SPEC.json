@@ -3,7 +3,7 @@
   "version": "v0.1.0",
   "target_runtime": "EVM",
   "execution_model": "Fail-Closed Gated Pipeline with Dual-Cadence Tiers, Binary Gate Verdicts, and Expert-in-the-Loop Attestation",
-  "official_description": "Kodr.pro High-Assurance Contract Verification & Security Pipeline (v0.1.0) is a fail-closed, dual-cadence verification system for EVM smart contracts. It enforces hermetic, fully pinned builds (Docker digest-pinned toolchain) and runs every stage under a binary GO/NO-GO gate. On every pull request it performs supply-chain and SBOM checks, deterministic compilation with bytecode size limits, static analysis with governed suppressions, event-emission and indexing verification, storage-layout and upgrade-safety analysis (including Diamond/ERC-2535), ERC standard conformance, and unit, differential, and mainnet-fork testing at >=95% coverage. On the release gate it adds an exhaustive access-control matrix, mutation testing (>=90% kill rate), multi-engine stateful fuzzing with cross-contract reentrancy handlers, source- and bytecode-level symbolic execution with dual bounded model checking (solc SMTChecker and Halmos), EVM-level formal theorem proving via Kontrol (KEVM/K Framework) with coverage-enforced non-vacuity, and a signed expert threat-model and specification review. The final stage cryptographically attests the entire evidence bundle.",
+  "official_description": "Kodr.pro High-Assurance Contract Verification & Security Pipeline (v0.1.0) is a fail-closed, dual-cadence verification system for EVM smart contracts. It enforces hermetic, fully pinned builds (Docker digest-pinned toolchain) and runs every stage under a binary GO/NO-GO gate. On every pull request it performs supply-chain and SBOM checks, deterministic compilation with bytecode size limits, static analysis with governed suppressions, event-emission and indexing verification, storage-layout and upgrade-safety analysis (including Diamond/ERC-2535), ERC standard conformance, and unit, differential, and mainnet-fork testing at >=95% coverage. On the release gate it adds an exhaustive access-control matrix, mutation testing (>=90% kill rate), multi-engine stateful fuzzing with cross-contract reentrancy handlers, source- and bytecode-level symbolic execution with dual bounded model checking (solc SMTChecker and hevm), EVM-level formal theorem proving via Kontrol (KEVM/K Framework) with coverage-enforced non-vacuity, and a signed expert threat-model and specification review. The final stage cryptographically attests the entire evidence bundle.",
   "capabilities": "Reproducible builds, dependency hygiene, comprehensive static and dynamic analysis, formal verification of specified properties (bounded model checking and EVM-level theorem proving), upgrade and access-control safety, standards compliance, and cryptographically signed provenance.",
   "security_level": "Among the strongest practical pre-deployment assurance processes currently achievable with open tooling. It provides high confidence that the code matches its stated invariants, access controls, and specifications, subject to the completeness of those specifications and the quality of the expert review. It does not eliminate residual risk from incomplete threat models or novel economic attacks.",
   "cadences": {
@@ -43,7 +43,6 @@
       "echidna": "2.4.0",
       "medusa": "1.5.1",
       "mythril": "0.24.8",
-      "halmos": "0.3.3",
       "kontrol": "runtimeverificationinc/kontrol:ubuntu-jammy-1.0.255 (digest-pinned, docker/pins.env)",
       "scribble": "0.7.10",
       "gambit": "1.0.6",
@@ -53,7 +52,8 @@
       "aiwrangler_mcp": {
         "version": "0.1.5",
         "runtime": "MCP server (@kodr/aiwrangler), invoked by the pipeline agent over the Model Context Protocol; not a CLI. Used for AST diff triage, gate verification assistance, and human-review acknowledgement of suppression-ratification findings."
-      }
+      },
+      "hevm": "0.58.0"
     }
   },
   "stages": [
@@ -525,10 +525,10 @@
           ]
         },
         {
-          "name": "Halmos",
-          "runtime": "Python / Z3 (pinned)",
+          "name": "hevm (argotorg fork)",
+          "runtime": "Pinned sha256 release binary (z3/bitwuzla backed)",
           "role": "primary source-level bounded model checker",
-          "purpose": "Formal verification of Foundry tests using symbolic inputs (assertion proving across symbolic calldata and storage)."
+          "purpose": "Symbolic execution of Foundry tests: proves test_Proof_* properties for all symbolic inputs. Replaces halmos (dormant since 2025-08, incompatible with forge-1.9 build-info)."
         },
         {
           "name": "Mythril",
@@ -554,7 +554,7 @@
       },
       "gate": {
         "decision": "GO_NO_GO",
-        "criteria": "All bounded paths proven safe; zero unmitigated bytecode vulnerabilities reported by Mythril/Halmos."
+        "criteria": "All bounded paths proven safe; zero unmitigated bytecode vulnerabilities reported by Mythril/hevm."
       }
     },
     {

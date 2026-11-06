@@ -77,7 +77,7 @@ TOOL_PIN_VARS = {
     "echidna": ["ECHIDNA_VERSION", "ECHIDNA_SHA256"],
     "medusa": ["MEDUSA_VERSION", "MEDUSA_SHA256"],
     "mythril": ["MYTHRIL_VERSION"],
-    "halmos": ["HALMOS_VERSION"],
+    "hevm": ["HEVM_VERSION", "HEVM_SHA256"],
     "kontrol": ["BASE_KONTROL_TAG", "BASE_KONTROL_DIGEST"],
     "scribble": ["SCRIBBLE_VERSION"],
     "gambit": ["GAMBIT_VERSION"],
