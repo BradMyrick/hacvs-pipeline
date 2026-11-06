@@ -20,9 +20,11 @@ mkdir -p "$WORK"
 #     remappings from the target, sourceroot = target, validation ON.
 note "generating mutants (gambit mutate)"
 python3 - "$WORK" <<'PY'
-import json, pathlib, sys
+import json, os, pathlib, sys
 work = pathlib.Path(sys.argv[1])
-target = pathlib.Path("/engagement/target")
+# resolve the engagement symlink: gambit canonicalizes paths and rejects
+# symlink-prefixed sourceroots
+target = pathlib.Path(os.path.realpath("/engagement/target"))
 srcs = ["src/PeekRegistry.sol", "src/CoveragePool.sol", "src/DemoHeartbeat.sol",
         "src/adapters/HarvestKeeper.sol", "src/adapters/PharaohEpochKeeper.sol"]
 # discover src files generically (fall back to all non-mock src contracts)
@@ -36,8 +38,8 @@ if rm.exists():
               if l.strip() and not l.startswith("#")]
 cfg = {
     "filename": srcs[0],
-    "outdir": "../mutation-workspace/mutants",
-    "sourceroot": "../target",
+    "outdir": str(work / "mutants"),
+    "sourceroot": str(target),
     "solc": "solc",
     "solc_remappings": remaps,
 }
