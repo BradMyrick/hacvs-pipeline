@@ -30,6 +30,7 @@ if proofs_path.exists():
         failures.append(f"{proofs.get('failed_count')} failed proofs: "
                         + ", ".join(proofs.get("failed", [])[:5]))
     cov = proofs.get("coverage_pct")
+    vac = eng / "review" / "KONTROL_VACUITY.md"
     vac_text = vac.read_text() if vac.exists() else ""
     if cov is None:
         # no CLI coverage metric in this Kontrol: non-vacuity must be carried by
