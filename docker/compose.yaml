@@ -93,7 +93,14 @@ services:
       - ./:/pipeline:ro
       - hacvsp-kontrol:/home/user/.kupyter
   stage-13: { <<: *stage-common, command: ["/pipeline/stages/13-expert-review/run.sh"] }
-  stage-14: { <<: *stage-common, command: ["/pipeline/stages/14-attestation/run.sh"] }
+  stage-14:
+    <<: *stage-common
+    command: ["/pipeline/stages/14-attestation/run.sh"]
+    volumes:
+      - ${ENGAGEMENT_DIR:-./engagements/_template}:/engagement
+      - ./:/pipeline:ro
+      - hacvsp-foundry:/root/.foundry
+      - ${HOME}/.ssh:/root/.ssh:ro
 
 volumes:
   hacvsp-foundry:

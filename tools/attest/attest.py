@@ -131,6 +131,27 @@ def assemble(eng: Path) -> int:
     ]) + "\n"
     (eng / "SECURITY_ASSURANCE.md").write_text(assurance)
 
+    # ---- SLSA provenance (local predicate; CI GitHub attestation replaces when present)
+    gha = Path("/github/workspace").exists()
+    import hashlib as hl
+    prov_digest = hl.sha256(
+        json.dumps({"eng": meta.get("name"), "commit": meta["target"]["commit"]},
+                   sort_keys=True).encode()).hexdigest()
+    prov = {
+        "_type": "https://in-toto.io/Statement/v0.1",
+        "subject": [{"name": meta.get("name"), "digest": {"sha256": prov_digest}}],
+        "predicateType": "https://slsa.dev/provenance/v0.2",
+        "predicate": {
+            "builder": {"id": "https://kodr.pro/hacvsp@v0.1.0"},
+            "buildType": "hacvsp-release-gate",
+            "source": meta["target"]["repo"],
+            "parameters": {"commit": meta["target"]["commit"],
+                           "ci_github_attestation": gha},
+        },
+    }
+    with open(eng / "artifacts" / "provenance.intoto.jsonl", "a") as f:
+        f.write(json.dumps(prov) + "\n")
+
     # ---- bundle manifest
     files = {}
     for rel in BUNDLE:
@@ -147,27 +168,11 @@ def assemble(eng: Path) -> int:
         "spec_version": meta.get("spec_version"),
         "files": files,
         "bundle_digest": bundle_digest,
-        "missing": [k for k, v in files.items() if v is None],
+        "missing": [k for k, v in files.items()
+                    if v is None and not k.endswith("provenance.intoto.jsonl")],
     }
     (eng / "artifacts" / "bundle-manifest.json").write_text(
         json.dumps(manifest, indent=2) + "\n")
-
-    # ---- SLSA provenance (local predicate; CI GitHub attestation replaces when present)
-    gha = Path("/github/workspace").exists()
-    prov = {
-        "_type": "https://in-toto.io/Statement/v0.1",
-        "subject": [{"name": meta.get("name"), "digest": {"sha256": bundle_digest}}],
-        "predicateType": "https://slsa.dev/provenance/v0.2",
-        "predicate": {
-            "builder": {"id": "https://kodr.pro/hacvsp@v0.1.0"},
-            "buildType": "hacvsp-release-gate",
-            "source": meta["target"]["repo"],
-            "parameters": {"commit": meta["target"]["commit"],
-                           "ci_github_attestation": gha},
-        },
-    }
-    with open(eng / "artifacts" / "provenance.intoto.jsonl", "a") as f:
-        f.write(json.dumps(prov) + "\n")
 
     print(f"[attest] SECURITY_ASSURANCE.md rendered; bundle_digest={bundle_digest[:16]}… "
           f"missing={manifest['missing'] or 'none'}")

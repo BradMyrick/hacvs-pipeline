@@ -11,7 +11,7 @@ stage_fail=0
 note() { echo "[stage-14] $*"; }
 fail() { echo "[stage-14] FAIL: $*" | tee "$ART/stage-14-failures.txt" >&2; exit 1; }
 
-command -v cosign >/dev/null 2>&1 || { fail "cosign not available in image"; exit 1; }
+# cosign OR ssh-keygen — either can sign the bundle
 
 note "assembling bundle (SECURITY_ASSURANCE.md, manifest, provenance)"
 python3 /pipeline/tools/attest/attest.py assemble --engagement "$ENG" \
@@ -23,17 +23,35 @@ if [ -n "$MISSING" ]; then
 fi
 
 note "signing bundle manifest"
-if [ -n "${COSIGN_KEY:-}" ]; then
+mkdir -p "$ENG/signatures"
+if [ -n "${COSIGN_KEY:-}" ] && command -v cosign >/dev/null 2>&1; then
   cosign sign-blob --key "$COSIGN_KEY" \
     --output-file "$ENG/signatures/bundle-attestation.sig" \
     "$ART/bundle-manifest.json" \
     || fail "cosign sign-blob failed"
-  note "signature written: signatures/bundle-attestation.sig"
+  note "cosign signature written: signatures/bundle-attestation.sig"
+elif command -v ssh-keygen >/dev/null 2>&1; then
+  # ssh-keygen path: sign the bundle manifest digest
+  BUNDLE_DIGEST=$(sha256sum "$ART/bundle-manifest.json" | cut -d' ' -f1)
+  SIGN_KEY="${HACVSP_SIGN_KEY:-$HOME/.ssh/id_ed25519}"
+  if [ -f "$SIGN_KEY" ]; then
+    echo "$BUNDLE_DIGEST" | ssh-keygen -Y sign -f "$SIGN_KEY" -n hacvsp \
+      > "$ENG/signatures/bundle-attestation.sig" 2>/dev/null \
+      || fail "ssh-keygen bundle signing failed"
+    ssh-keygen -y -f "$SIGN_KEY" > "$ENG/signatures/bundle-attestation.pub" 2>/dev/null
+    note "ssh-keygen signature written: signatures/bundle-attestation.sig"
+  else
+    if [ "${HACVSP_ALLOW_UNSIGNED:-0}" = "1" ]; then
+      note "HACVSP_ALLOW_UNSIGNED=1 — unsigned bundle recorded (DRY-RUN ONLY)"
+    else
+      fail "no signing key: set COSIGN_KEY or HACVSP_SIGN_KEY, or create ~/.ssh/id_ed25519"
+    fi
+  fi
 else
   if [ "${HACVSP_ALLOW_UNSIGNED:-0}" = "1" ]; then
     note "HACVSP_ALLOW_UNSIGNED=1 — unsigned bundle recorded (DRY-RUN ONLY)"
   else
-    fail "COSIGN_KEY unset — cannot sign bundle (fail-closed; set COSIGN_KEY in engagement .env)"
+    fail "no signing tool available (cosign or ssh-keygen)"
   fi
 fi
 
