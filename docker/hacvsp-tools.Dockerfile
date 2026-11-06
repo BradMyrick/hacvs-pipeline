@@ -126,7 +126,7 @@ RUN set -eux; \
       echo "${HEVM_SHA256}  /usr/local/bin/hevm" | sha256sum -c -; \
     else echo "!! WARN: hevm UNPINNED — run make pin"; fi; \
     chmod +x /usr/local/bin/hevm; \
-    hevm --version
+    hevm --help > /dev/null
 
 # Echidna
 RUN set -eux; \
