@@ -14,7 +14,7 @@ failures = require_files(eng, [
 ])
 evidence = [
     "artifacts/smt-build.log",
-    "artifacts/halmos-results.txt",
+    "artifacts/hevm-results.txt",
     "artifacts/symbolic-summary.json",
     "artifacts/mythril-results.json",
     "artifacts/mythril-summary.json",
