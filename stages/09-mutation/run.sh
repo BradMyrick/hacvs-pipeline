@@ -72,7 +72,7 @@ note "mutants generated: $TOTAL"
 
 # --- Baseline: harness must pass unmutated (fail-closed sanity)
 note "baseline test run (unmutated harness must pass)"
-forge test --no-match-path 'test/invariant/*' --no-match-path 'test/fork/*' --json \
+forge test --no-match-path 'test/invariant/*' --json \
   > "$WORK/baseline.ndjson" 2>/dev/null || fail "baseline test suite fails — mutation run meaningless"
 
 # --- Mutation loop (resumable; originals restored from backups, never from git)
@@ -119,8 +119,7 @@ for r in rows:
         progress["done"].append(mid); progress_f.write_text(json.dumps(progress)); continue
     try:
         res = subprocess.run(
-            ["forge", "test", "--no-match-path", "test/invariant/*",
-             "--no-match-path", "test/fork/*", "--json"],
+            ["forge", "test", "--no-match-path", "test/invariant/*", "--json"],
             cwd=target, capture_output=True, text=True, timeout=900)
         killed = res.returncode != 0
     except subprocess.TimeoutExpired:
