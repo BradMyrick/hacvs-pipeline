@@ -51,11 +51,10 @@ passed, failed = [], []
 for section in prove_log.split("=== ")[1:]:
     name = section.split(" ===")[0].strip()
     body = section.split("===", 1)[1] if "===" in section else section
-    statuses = re.findall(r"test%[\w%.]+?\s+(PASSED|FAILED):", body)
-    # a test passes iff its function-level entry PASSED and none FAILED
-    if statuses and "FAILED" not in statuses:
+    # Kontrol emits explicit end-of-run markers per proof; ANSI-safe text match
+    if "PROOF PASSED" in body and "PROOF FAILED" not in body:
         passed.append(name)
-    elif "FAILED" in statuses:
+    elif "PROOF FAILED" in body:
         failed.append(name)
 cov_raw = (art / "kontrol-coverage-raw.txt")
 coverage_pct = None
