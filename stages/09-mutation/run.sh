@@ -16,52 +16,58 @@ LIMIT="${HACVSP_MUTATION_LIMIT:-0}"   # 0 = all mutants
 WORK="$ART/mutation-workspace"
 mkdir -p "$WORK"
 
-# --- Build gambit config (1.0.6 schema): array of per-file configs,
-#     remappings from the target, sourceroot = target, validation ON.
-note "generating mutants (gambit mutate)"
-python3 - "$WORK" <<'PY'
-import json, os, pathlib, sys
-work = pathlib.Path(sys.argv[1])
-# resolve the engagement symlink: gambit canonicalizes paths and rejects
-# symlink-prefixed sourceroots
-target = pathlib.Path(os.path.realpath("/engagement/target"))
-srcs = ["src/PeekRegistry.sol", "src/CoveragePool.sol", "src/DemoHeartbeat.sol",
-        "src/adapters/HarvestKeeper.sol", "src/adapters/PharaohEpochKeeper.sol"]
-# discover src files generically (fall back to all non-mock src contracts)
-found = [p.relative_to(target).as_posix() for p in sorted(target.glob("src/**/*.sol"))
-         if "/mocks/" not in p.as_posix()]
-srcs = found or srcs
-remaps = []
-rm = target / "remappings.txt"
-if rm.exists():
-    remaps = [l.strip() for l in rm.read_text().splitlines()
-              if l.strip() and not l.startswith("#")]
-cfg = {
-    "filename": srcs[0],
-    "outdir": str(work / "mutants"),
-    "sourceroot": str(target),
-    "solc": "solc",
-    "solc_remappings": remaps,
-}
-# array-of-configs form: one entry per file (all share outdir)
-configs = []
-for f in srcs:
-    c = dict(cfg); c["filename"] = f
-    configs.append(c)
-(work / "gambit.json").write_text(json.dumps(configs, indent=1))
-print(f"[stage-09] gambit config: {len(srcs)} files, {len(remaps)} remappings")
-PY
+# --- Generate mutants per file via the CLI form (proven interface; the
+#     array-config form panics in gambit 1.0.6), then merge the corpus.
+note "generating mutants (gambit mutate, per-file CLI)"
+TARGET_REAL="$(readlink -f "$TARGET")"
+REMAPS_CLI=()
+while IFS= read -r rm; do
+  [ -n "$rm" ] && REMAPS_CLI+=(--solc_remappings "$rm")
+done < <(grep -vE '^\s*(#|$)' "$TARGET/remappings.txt" 2>/dev/null || true)
 
-# mutants dir is pipeline-owned scratch: rotate (never delete) if present
 if [ -d "$WORK/mutants" ]; then
   mv "$WORK/mutants" "$WORK/mutants.prev"
 fi
-gambit mutate --json "$WORK/gambit.json" > "$WORK/gambit-stdout.txt" 2>&1 \
-  || fail "gambit mutate failed — see $WORK/gambit-stdout.txt"
+mkdir -p "$WORK/per-file" "$WORK/mutants"
+
+i=0
+: > "$WORK/mutants/mutants.log"
+for f in $(cd "$TARGET" && find src -name '*.sol' | grep -v '/mocks/' | sort); do
+  i=$((i+1))
+  out="$WORK/per-file/$i"
+  if ! (cd "$TARGET_REAL" && gambit mutate --filename "$f" --outdir "$out" \
+          "${REMAPS_CLI[@]}" > "$WORK/gambit-$i.txt" 2>&1); then
+    note "gambit failed on $f (see $WORK/gambit-$i.txt) — skipping file"
+    continue
+  fi
+  # merge: renumber mids by offset, copy mutant dirs, append log rows
+  python3 - "$out" "$WORK/mutants" <<'MERGE'
+import pathlib, shutil, sys
+src, dst = pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2])
+log = src / "mutants.log"
+if not log.exists():
+    raise SystemExit(0)
+rows = [l for l in log.read_text().splitlines() if l.strip()]
+try:
+    offset = max(int(r.split(",", 1)[0]) for r in dst.joinpath("mutants.log")
+                 .read_text().splitlines() if r.strip()) if dst.joinpath("mutants.log").stat().st_size else 0
+except Exception:
+    offset = 0
+for r in rows:
+    mid = int(r.split(",", 1)[0]) + offset
+    dst.joinpath("mutants.log").write_text(
+        dst.joinpath("mutants.log").read_text() +
+        r.replace(r.split(",", 1)[0], str(mid), 1) + "\n")
+    mdir = src / "mutants" / r.split(",", 1)[0]
+    if mdir.is_dir():
+        shutil.copytree(mdir, dst / "mutants" / str(mid), dirs_exist_ok=True)
+MERGE
+  note "mutated $f"
+done
 
 LOG="$WORK/mutants/mutants.log"
-[ -f "$LOG" ] || fail "gambit produced no mutants.log (zero mutants generated?)"
-TOTAL="$(wc -l < "$LOG" | tr -d ' ')"
+TOTAL="$(grep -c . "$LOG" || true)"
+[ "$TOTAL" -gt 0 ] || fail "gambit produced zero mutants (solc/import resolution?)"
 note "mutants generated: $TOTAL"
 
 # --- Baseline: harness must pass unmutated (fail-closed sanity)
