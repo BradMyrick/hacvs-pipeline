@@ -46,11 +46,32 @@ PY
 
 # --- Mythril: bytecode-level taint/path analysis
 note "mythril bytecode-level analysis"
+# mythril 0.24.8: -o json to stdout (no --output flag); capture + parse
 myth analyze src \
-  --json --output "$ART/mythril-results.json" \
+  -o jsonv2 \
   --execution-timeout 600 --solver-timeout 30000 --strategy bfs \
-  > "$ART/mythril-stdout.txt" 2>&1 \
+  > "$ART/mythril-raw.txt" 2>&1 \
   || note "mythril exited non-zero (issues found or timeout — parsed below)"
+python3 - "$ART" <<'EXTRACT'
+import json, pathlib, sys
+art = pathlib.Path(sys.argv[1])
+raw = (art / "mythil-raw.txt") if (art / "mythil-raw.txt").exists() else (art / "mythril-raw.txt")
+text = raw.read_text()
+# jsonv2 output may embed the JSON after log lines; find first { ... } block
+start = text.find("{")
+try:
+    data = json.loads(text[start:]) if start >= 0 else {}
+except Exception:
+    # try line-wise: last JSON object
+    data = {}
+    for line in text.splitlines():
+        line = line.strip()
+        if line.startswith("{") and line.endswith("}"):
+            try: data = json.loads(line)
+            except Exception: pass
+(art / "mythril-results.json").write_text(json.dumps(data, indent=2) + "\n")
+print(f"[stage-11] mythril issues: {len(data.get('issues', []) or [])}")
+EXTRACT
 
 python3 - "$ART" <<'PY'
 import json, pathlib, sys
