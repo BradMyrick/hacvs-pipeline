@@ -60,7 +60,7 @@ for r in rows:
         r.replace(r.split(",", 1)[0], str(mid), 1) + "\n")
     mdir = src / "mutants" / r.split(",", 1)[0]
     if mdir.is_dir():
-        shutil.copytree(mdir, dst / "mutants" / str(mid), dirs_exist_ok=True)
+        shutil.copytree(mdir, dst / str(mid), dirs_exist_ok=True)
 MERGE
   note "mutated $f"
 done
