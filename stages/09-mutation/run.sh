@@ -70,6 +70,11 @@ TOTAL="$(grep -c . "$LOG" || true)"
 [ "$TOTAL" -gt 0 ] || fail "gambit produced zero mutants (solc/import resolution?)"
 note "mutants generated: $TOTAL"
 
+# corpus regenerated => prior progress refers to old mids: rotate it
+if [ -f "$ART/mutation-progress.json" ]; then
+  mv "$ART/mutation-progress.json" "$ART/mutation-progress.prev"
+fi
+
 # --- Baseline: harness must pass unmutated (fail-closed sanity)
 note "baseline test run (unmutated harness must pass)"
 forge test --no-match-path 'test/invariant/*' --json \
