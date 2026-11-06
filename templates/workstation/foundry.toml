@@ -14,8 +14,9 @@ fs_permissions = [{ access = "read", path = "./" }]
 fuzz = { runs = 256 }
 invariant = { runs = 256, depth = 500, fail_on_revert = false }
 
-# Stage 11 — solc SMTChecker (bmc + chc), spec-locked targets/timeout
-[profile.default.model_checker]
+# Stage 11 — solc SMTChecker lives in its own profile (FOUNDRY_PROFILE=smt)
+# so ordinary builds — local, CI, Kontrol — never run SMT.
+[profile.smt.model_checker]
 engine = "all"
 targets = ["assert", "underflow", "overflow", "divByZero", "balance"]
 timeout = 120000

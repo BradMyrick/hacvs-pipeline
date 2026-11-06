@@ -16,7 +16,7 @@ cd "$TARGET" || { fail "target/ missing"; exit 1; }
 note "SMTChecker build (bmc+chc, targets: assert,underflow,overflow,divByZero,balance)"
 grep -q "\[profile.default.model_checker\]" foundry.toml \
   || fail "foundry.toml lacks [profile.default.model_checker] (scaffold provides spec settings)"
-forge build --force > "$ART/smt-build.log" 2>&1 \
+FOUNDRY_PROFILE=smt forge build --force > "$ART/smt-build.log" 2>&1 \
   || { grep -q "Counterexample" "$ART/smt-build.log" && fail "SMTChecker found counterexamples — see artifacts/smt-build.log" || fail "forge build (smt) failed"; }
 if grep -q "Counterexample" "$ART/smt-build.log"; then
   fail "SMTChecker counterexamples present — see artifacts/smt-build.log"
