@@ -169,15 +169,35 @@ def ratify_page(slug: str, p: dict, flash: str = "") -> bytes:
     digests = (", ".join(p["unratified_suppression_digests"])
                if p["unratified_suppression_digests"] else "<em>all ratified</em>")
     flash_html = f'<div class="flash {"flash-warn" if "warn" in flash.lower() else ""}">{esc(flash)}</div>' if flash else ""
+    signed = p['signoff_signed']
+    ok = "✅"
+    pend = "⬜"
+    signoff_status = f'{ok} <strong>SIGNED</strong>' if signed else f'{pend} not signed'
+    if not signed:
+        btn = f"""
+<div style="margin-top:1rem;border:2px solid #1b7f3b;padding:1rem;border-radius:8px;background:#f4fbf6">
+<strong>Sign Stage-13 Sign-Off</strong>
+<p class="dim" style="margin:.4rem 0;font-size:.85rem">
+Applies your ssh-ed25519 signature to MANUAL_REVIEW_SIGNOFF.md
+using the host's signing key. This is the final expert action.</p>
+<form method="post" action="/e/{slug}/signoff-ui" class="row">
+<input type="text" name="reviewer" placeholder="your name" required>
+<input type="text" name="confirm" placeholder="type {esc(slug)} to confirm" required>
+<button>Sign & Approve</button>
+</form>
+</div>"""
+    else:
+        btn = ""
     return base(f"{slug} ratify", f"""
 {flash_html}
 <h1>⚖ Ratification queue — {esc(slug)}</h1>
 <h2>Stage-13 readiness</h2>
 <ul>
-<li>{'✅' if p['stages_1_12_go'] else '⬜'} stages 1–12 all GO</li>
-<li>{'✅' if p['kontrol_vacuity_doc'] else '⬜'} KONTROL_VACUITY.md present</li>
-<li>{'✅' if p['signoff_signed'] else '⬜'} manual sign-off signed</li>
+<li>{ok if p['stages_1_12_go'] else pend} stages 1–12 all GO</li>
+<li>{ok if p['kontrol_vacuity_doc'] else pend} KONTROL_VACUITY.md present</li>
+<li>{signoff_status}</li>
 </ul>
+{btn}
 <h2>Review documents</h2><ul>{docs}</ul>
 <h2>Exception documents (in target repo)</h2><ul>{exc}</ul>
 <h2>Suppression digests — {p['suppression_count']} total</h2>

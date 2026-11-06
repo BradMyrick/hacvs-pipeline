@@ -49,22 +49,42 @@ sys.exit(1 if unratified else 0)
 PY
 
 # --- Signature verification: expert must have signed the signoff payload
+# Supports two signing methods:
+#   1. cosign (if KODR_PUBKEY is set and cosign is available)
+#   2. ssh-keygen (if signatures/manual-signoff.pub exists alongside the .sig)
 SIGNOFF="$ENG/review/MANUAL_REVIEW_SIGNOFF.md"
 SIG="$ENG/signatures/manual-signoff.sig"
-PUBKEY="${KODR_PUBKEY:-}"
+SIGPUB="$ENG/signatures/manual-signoff.pub"
 VERIFIED="false"
+
 if [ -f "$SIGNOFF" ] && [ -f "$SIG" ]; then
-  if [ -n "$PUBKEY" ] && command -v cosign >/dev/null 2>&1; then
-    if cosign verify-blob --key "$PUBKEY" --signature "$SIG" "$SIGNOFF" \
+  if [ -n "${KODR_PUBKEY:-}" ] && [ -f "${KODR_PUBKEY}" ] && command -v cosign >/dev/null 2>&1; then
+    # cosign path
+    if cosign verify-blob --key "$KODR_PUBKEY" --signature "$SIG" "$SIGNOFF" \
         > "$ART/signoff-verify.txt" 2>&1; then
-      VERIFIED="true"; note "cosign signature VERIFIED against KODR_PUBKEY"
+      VERIFIED="true"; note "cosign signature VERIFIED"
     else
       fail "cosign signature verification FAILED — see artifacts/signoff-verify.txt"
+    fi
+  elif [ -f "$SIGPUB" ]; then
+    # ssh-keygen path: verify with the pubkey stored alongside the signature
+    DIGEST=$(sha256sum "$SIGNOFF" | cut -d' ' -f1)
+    if ssh-keygen -Y verify -f "$SIGPUB" -I "principal-security-engineer" \
+        -n hacvsp < <(echo "$DIGEST") 2>/dev/null <<< "$(cat "$SIG")"; then
+      VERIFIED="true"; note "ssh-keygen signature VERIFIED against stored pubkey"
+    else
+      # try without the sig on stdin (some ssh-keygen versions read from file)
+      if ssh-keygen -Y verify -f "$SIGPUB" -I "principal-security-engineer" \
+          -n hacvsp "$DIGEST" < "$SIG" 2>/dev/null; then
+        VERIFIED="true"; note "ssh-keygen signature VERIFIED (file mode)"
+      else
+        fail "ssh-keygen signature verification FAILED — signature/key mismatch"
+      fi
     fi
   elif [ "${HACVSP_ALLOW_STRUCTURAL_SIGNOFF:-0}" = "1" ]; then
     note "structural signoff mode (HACVSP_ALLOW_STRUCTURAL_SIGNOFF=1) — recorded, NOT cryptographic"
   else
-    fail "no KODR_PUBKEY for cryptographic verification — set KODR_PUBKEY in engagement .env (fail-closed)"
+    fail "no verification method available: set KODR_PUBKEY for cosign, or use the dashboard's Sign button (which stores the pubkey alongside the signature)"
   fi
 fi
 

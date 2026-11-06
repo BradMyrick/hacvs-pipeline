@@ -141,3 +141,36 @@ def save_workspace(slug: str, doc: str, sections: list[str]) -> list[str]:
     if not content.lstrip().startswith("#"):
         content = f"# {doc}\n\n{content}"
     return save_review_doc(slug, doc, content)
+
+
+def do_signoff_ui(slug: str, reviewer: str) -> dict:
+    """Sign the sign-off from the dashboard (host-side ssh-keygen)."""
+    signoff = eng_dir(slug) / "review" / "MANUAL_REVIEW_SIGNOFF.md"
+    if not signoff.exists():
+        raise FileNotFoundError("MANUAL_REVIEW_SIGNOFF.md not drafted yet")
+    content = signoff.read_text()
+    missing = [s2 for s2 in REVIEW_REQUIRED_SECTIONS["MANUAL_REVIEW_SIGNOFF.md"]
+               if s2.lower() not in content.lower()]
+    if missing:
+        raise ValueError(f"sign-off blocked: missing sections {missing}")
+
+    import hashlib, subprocess
+    digest = hashlib.sha256(content.encode()).hexdigest()
+    key = sign.signing_key()
+    res = subprocess.run(
+        ["ssh-keygen", "-Y", "sign", "-f", str(key), "-n", "hacvsp"],
+        input=digest.encode(), capture_output=True, check=True, timeout=30)
+    sig = res.stdout.decode().strip()
+
+    sigdir = eng_dir(slug) / "signatures"
+    sigdir.mkdir(exist_ok=True)
+    _atomic_write(sigdir / "manual-signoff.sig", sig + "\n")
+
+    # write the pubkey for the runner to verify against
+    pub = subprocess.run(
+        ["ssh-keygen", "-y", "-f", str(key)],
+        capture_output=True, text=True, check=True, timeout=10).stdout.strip()
+    _atomic_write(sigdir / "manual-signoff.pub", pub + "\n")
+
+    activity(slug, f"STAGE-13 SIGN-OFF signed via dashboard by {reviewer}")
+    return {"reviewer": reviewer, "signature": "signatures/manual-signoff.sig"}

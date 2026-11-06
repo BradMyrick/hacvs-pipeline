@@ -151,6 +151,16 @@ class UiHandler(BaseHTTPRequestHandler):
                 return self._redirect(base + f"/review/{doc}",
                                       f"saved. ⚠ missing sections: {warn}" if warn else "saved ✓")
 
+            if parts[2] == "signoff-ui":
+                if f.get("confirm", [""])[0] != slug:
+                    return self._redirect(base + "/ratify",
+                                          f"sign-off blocked: type the slug to confirm")
+                try:
+                    actions.do_signoff_ui(slug, f.get("reviewer", "?"))
+                    return self._redirect(base + "/ratify", "STAGE-13 SIGNED via dashboard")
+                except Exception as exc:
+                    return self._redirect(base + "/ratify", f"sign-off failed: {exc}")
+
             if parts[2] == "signoff":
                 if f.get("confirm") != slug:
                     return self._redirect(base + "/ratify",
