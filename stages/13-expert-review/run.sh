@@ -67,20 +67,17 @@ if [ -f "$SIGNOFF" ] && [ -f "$SIG" ]; then
       fail "cosign signature verification FAILED — see artifacts/signoff-verify.txt"
     fi
   elif [ -f "$SIGPUB" ]; then
-    # ssh-keygen path: verify with the pubkey stored alongside the signature
+    # ssh-keygen path: verify using allowed-signers format
     DIGEST=$(sha256sum "$SIGNOFF" | cut -d' ' -f1)
-    if ssh-keygen -Y verify -f "$SIGPUB" -I "principal-security-engineer" \
-        -n hacvsp < <(echo "$DIGEST") 2>/dev/null <<< "$(cat "$SIG")"; then
-      VERIFIED="true"; note "ssh-keygen signature VERIFIED against stored pubkey"
+    ALLOWED=$(mktemp)
+    echo "reviewer $(cat "$SIGPUB")" > "$ALLOWED"
+    if echo "$DIGEST" | ssh-keygen -Y verify -f "$ALLOWED" -I reviewer \
+        -n hacvsp -s "$SIG" 2>/dev/null; then
+      VERIFIED="true"; note "ssh-keygen signature VERIFIED"
     else
-      # try without the sig on stdin (some ssh-keygen versions read from file)
-      if ssh-keygen -Y verify -f "$SIGPUB" -I "principal-security-engineer" \
-          -n hacvsp "$DIGEST" < "$SIG" 2>/dev/null; then
-        VERIFIED="true"; note "ssh-keygen signature VERIFIED (file mode)"
-      else
-        fail "ssh-keygen signature verification FAILED — signature/key mismatch"
-      fi
+      fail "ssh-keygen signature verification FAILED — signature/key mismatch"
     fi
+    rm -f "$ALLOWED"
   elif [ "${HACVSP_ALLOW_STRUCTURAL_SIGNOFF:-0}" = "1" ]; then
     note "structural signoff mode (HACVSP_ALLOW_STRUCTURAL_SIGNOFF=1) — recorded, NOT cryptographic"
   else
