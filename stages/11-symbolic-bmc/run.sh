@@ -22,7 +22,9 @@ if grep -q "Counterexample" "$ART/smt-build.log"; then
   fail "SMTChecker counterexamples present — see artifacts/smt-build.log"
 fi
 CE_COUNT=$(grep -c "Counterexample" "$ART/smt-build.log" || true)
-note "SMTChecker counterexamples: ${CE_COUNT:-0}"
+SOLVERLESS=0
+grep -q "analysis was not possible" "$ART/smt-build.log" && SOLVERLESS=1
+note "SMTChecker counterexamples: ${CE_COUNT:-0} (solverless-build: ${SOLVERLESS})"
 
 # --- Halmos: primary source-level bounded model checker over Foundry tests
 note "halmos symbolic execution of Foundry tests"
@@ -32,11 +34,12 @@ HALMOS_FAIL=$(grep -cE "Failing tests:|FAILED" "$ART/halmos-results.txt" || true
 HALMOS_PASS=$(grep -cE "PASS" "$ART/halmos-results.txt" || true)
 note "halmos: passing=${HALMOS_PASS:-0} failing=${HALMOS_FAIL:-0}"
 
-python3 - "$ART" "${HALMOS_PASS:-0}" "${HALMOS_FAIL:-0}" "${CE_COUNT:-0}" <<'PY'
+python3 - "$ART" "${HALMOS_PASS:-0}" "${HALMOS_FAIL:-0}" "${CE_COUNT:-0}" "$SOLVERLESS" <<'PY'
 import json, pathlib, sys
 art, p, f, ce = pathlib.Path(sys.argv[1]), *map(int, sys.argv[2:5])
+solverless = bool(int(sys.argv[5]))
 (art / "symbolic-summary.json").write_text(json.dumps({
-    "smtchecker": {"counterexamples": ce},
+    "smtchecker": {"counterexamples": ce, "solver_unavailable": solverless},
     "halmos": {"passing": p, "failing": f},
 }, indent=2) + "\n")
 PY
