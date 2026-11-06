@@ -35,9 +35,9 @@ if sym.exists():
     hevm = s.get("hevm") or {}
     if hevm.get("failing", 0) != 0:
         failures.append(f"hevm failing proofs: {hevm.get('failing')}")
-    if halmos.get("passing", 0) == 0:
-        failures.append("halmos proved nothing (no symbolic tests found — "
-                        "add test/proofs with symbolic-bound inputs)")
+    if hevm.get("passing", 0) == 0:
+        failures.append("hevm proved nothing (no proof corpus found — "
+                        "add test/proofs/ with test_Proof_* properties)")
 
 myth = eng / "artifacts" / "mythril-summary.json"
 if myth.exists():
