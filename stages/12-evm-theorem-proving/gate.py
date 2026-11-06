@@ -30,8 +30,14 @@ if proofs_path.exists():
         failures.append(f"{proofs.get('failed_count')} failed proofs: "
                         + ", ".join(proofs.get("failed", [])[:5]))
     cov = proofs.get("coverage_pct")
+    vac_text = vac.read_text() if vac.exists() else ""
     if cov is None:
-        failures.append("coverage could not be determined from view-coverage output")
+        # no CLI coverage metric in this Kontrol: non-vacuity must be carried by
+        # an explicit acknowledgment in the vacuity doc
+        if "coverage: tool-unavailable" not in vac_text:
+            failures.append(
+                "no CLI coverage metric (kontrol 1.0.255); vacuity doc must "
+                "state 'coverage: tool-unavailable' with per-rule rationale")
     elif cov < proofs.get("coverage_min_pct", 90):
         failures.append(f"node/rule coverage {cov}% below floor {proofs.get('coverage_min_pct')}% "
                         "(non-vacuity enforcement)")

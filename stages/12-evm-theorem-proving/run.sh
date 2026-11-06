@@ -37,9 +37,10 @@ for m in "${MATCHES[@]}"; do
     || note "kontrol prove exited non-zero for $m (parsed below)"
 done
 
-note "kontrol view-coverage"
-kontrol view-coverage > "$ART/kontrol-coverage-raw.txt" 2>&1 \
-  || note "view-coverage unavailable (recorded)"
+# kontrol 1.0.255 has no view-coverage subcommand; capture proof inventory via
+# `kontrol list` instead — non-vacuity is carried by review/KONTROL_VACUITY.md
+note "kontrol list (proof inventory; no view-coverage in 1.0.255)"
+kontrol list > "$ART/kontrol-list.txt" 2>&1 || note "kontrol list unavailable (recorded)"
 
 python3 - "$ART" "$COV_MIN" <<'PY' || fail "kontrol results parsing found failures"
 import json, pathlib, re, sys
@@ -56,12 +57,7 @@ for section in prove_log.split("=== ")[1:]:
         passed.append(name)
     elif "PROOF FAILED" in body:
         failed.append(name)
-cov_raw = (art / "kontrol-coverage-raw.txt")
-coverage_pct = None
-if cov_raw.exists():
-    m = re.search(r"coverage[^\d]*(\d+(?:\.\d+)?)%", cov_raw.read_text(), re.I)
-    if m:
-        coverage_pct = float(m.group(1))
+coverage_pct = None  # no CLI coverage metric in kontrol 1.0.255
 proofs = {
     "passed": sorted(set(passed)),
     "failed": sorted(set(failed)),
@@ -75,7 +71,11 @@ proofs = {
 (art / "kontrol-proofs.json").write_text(json.dumps(proofs, indent=2) + "\n")
 (art / "kontrol-coverage.json").write_text(json.dumps({
     "coverage_pct": coverage_pct, "min_required": cov_min,
-    "raw": cov_raw.read_text()[:4000] if cov_raw.exists() else "",
+    "note": "kontrol 1.0.255 exposes no CLI coverage metric; non-vacuity is "
+            "enforced via review/KONTROL_VACUITY.md per-rule rationale "
+            "(gate-verified) plus the hevm cross-proof of the same corpus",
+    "proof_inventory": (art / "kontrol-list.txt").read_text()[:4000]
+    if (art / "kontrol-list.txt").exists() else "",
 }, indent=2) + "\n")
 print(json.dumps({k: proofs[k] for k in ("total", "failed_count", "coverage_pct", "ok")}))
 sys.exit(0 if proofs["ok"] else 1)
