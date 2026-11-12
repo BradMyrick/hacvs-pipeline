@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Stage 12 gate — zero failed Kontrol proofs; coverage-enforced non-vacuity."""
+"""Stage 12 gate — zero failed Kontrol proofs; vacuity doc names every proof.
+
+Pinned Kontrol 1.0.255 writes no coverage percentage. When coverage_pct is
+null, review/KONTROL_VACUITY.md must contain 'coverage: tool-unavailable'
+and every recorded proof name. This gate does not verify a signature on
+that file.
+"""
 import sys
 from pathlib import Path
 

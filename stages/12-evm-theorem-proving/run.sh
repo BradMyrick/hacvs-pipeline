@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Stage 12 — EVM-level theorem proving via Kontrol/KEVM (RELEASE tier, long-running)
-# Gate: zero failed proofs; coverage-enforced non-vacuity.
+# Gate: zero failed proofs. Kontrol 1.0.255 has no coverage metric.
+# Non-vacuity is review/KONTROL_VACUITY.md (names every recorded proof; unsigned).
 # NOTE: runs in the pinned kontrol image (docker/compose.yaml service stage-12).
 set -uo pipefail
 umask 0000  # container-created evidence stays host-manageable (runners execute as root)
@@ -15,7 +16,7 @@ cd "$TARGET" || { fail "target/ missing"; exit 1; }
 
 MATCH="$(python3 -c "import json;print(json.load(open('$ENG/engagement.json'))['applicability'].get('kontrol_match','Proof*'))")"
 COV_MIN="$(python3 -c "import json;print(json.load(open('$ENG/engagement.json'))['applicability'].get('kontrol_coverage_min_pct',90))")"
-note "proof match: ${MATCH} | coverage floor: ${COV_MIN}%"
+note "proof match: ${MATCH} | coverage_min_pct ${COV_MIN} recorded, not applied (no coverage metric in kontrol 1.0.255)"
 
 command -v kontrol >/dev/null 2>&1 || { fail "kontrol binary not on PATH (must run in stage-12/kontrol image)"; exit 1; }
 
@@ -71,9 +72,12 @@ proofs = {
 (art / "kontrol-proofs.json").write_text(json.dumps(proofs, indent=2) + "\n")
 (art / "kontrol-coverage.json").write_text(json.dumps({
     "coverage_pct": coverage_pct, "min_required": cov_min,
-    "note": "kontrol 1.0.255 exposes no CLI coverage metric; non-vacuity is "
-            "enforced via review/KONTROL_VACUITY.md per-rule rationale "
-            "(gate-verified) plus the hevm cross-proof of the same corpus",
+    "note": "kontrol 1.0.255 exposes no CLI coverage metric. Non-vacuity is a "
+            "written rationale in review/KONTROL_VACUITY.md: the gate checks "
+            "that the file exists, contains 'coverage: tool-unavailable', and "
+            "names every recorded proof. It does not check a signature. "
+            "Stage 11 hevm proves the Foundry proof tests separately; this "
+            "stage does not re-check that result",
     "proof_inventory": (art / "kontrol-list.txt").read_text()[:4000]
     if (art / "kontrol-list.txt").exists() else "",
 }, indent=2) + "\n")
@@ -83,7 +87,7 @@ PY
 
 note "non-vacuity: review/KONTROL_VACUITY.md must document rationale per proof"
 if [ ! -f "$ENG/review/KONTROL_VACUITY.md" ]; then
-  fail "review/KONTROL_VACUITY.md missing — each proven rule needs non-vacuity rationale (symbolic inputs genuinely unconstrained, branch coverage non-trivial)"
+  fail "review/KONTROL_VACUITY.md missing — write a per-proof non-vacuity rationale (include 'coverage: tool-unavailable'). The gate checks that every recorded proof name appears in the file; it does not check a signature"
 fi
 
 exit $stage_fail

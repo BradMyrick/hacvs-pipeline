@@ -7,8 +7,13 @@ digest-pinned Docker toolchain, binary GO/NO-GO gates, dual cadences (PR tier
 1–7, release gate 8–14), signed suppression governance, and cryptographic
 attestation of the entire evidence bundle. Certora-free formal layer: **hevm**
 (source-level bounded model checking) + **Kontrol/KEVM** (EVM-level theorem
-proving with coverage-enforced non-vacuity). AiWrangler participates as an
-**MCP server** (0.1.5), not a CLI.
+proving). Pinned Kontrol 1.0.255 has no proof-coverage metric. Non-vacuity is
+a written rationale in `review/KONTROL_VACUITY.md`: the stage 12 gate fails if
+that file is missing or does not name every recorded proof. It does not check
+a signature on the file. Stage 11 hevm proves the Foundry proof tests
+separately. The stage 13 signature is on `MANUAL_REVIEW_SIGNOFF.md`, not on
+the vacuity file. AiWrangler participates as an **MCP server** (0.1.5), not a
+CLI.
 
 ```
 SPEC.json ──gates──> hacvsp CLI ──docker(compose)──> stages/01..14

@@ -30,7 +30,7 @@ Protocol whitepaper / docs: _
 
 ## Formal layers (Stages 11-12)
 - Kontrol proof corpus match (default `Proof*`): _
-- Kontrol coverage floor (default 90): _
+- Kontrol coverage floor (recorded only; 1.0.255 reports no coverage, so it is not applied; default 90): _
 
 ## Sign-off (Stages 13-14)
 - Principal Security Engineer: _
