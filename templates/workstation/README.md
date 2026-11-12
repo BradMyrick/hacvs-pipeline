@@ -16,7 +16,7 @@ A pipeline-compliant Foundry scaffold for developing EVM contracts under the
 | `test/access-control/` | 8 (declared + GeneratedAccessMatrix.t.sol + Manual) |
 | `test/invariant/` (Handler + Actors + ReentrancyReceiver) | 10 |
 | `fuzz/echidna.yaml`, `fuzz/medusa.json` | 10 |
-| `test/proofs/` | 11 (Halmos BMC) + 12 (Kontrol theorem proving) |
+| `test/proofs/` | 11 (hevm BMC) + 12 (Kontrol theorem proving) |
 | `COVERAGE_EXCEPTIONS.md`, `MUTATION_EXCEPTIONS.md` | 7 / 9 triage |
 | `.github/workflows/pr-tier.yml`, `release-gate.yml` | CI cadences |
 
@@ -40,5 +40,7 @@ forge build && forge test
 
 ## Proof corpus naming
 
-- Halmos (Stage 11) + Kontrol (Stage 12) run tests named `Proof*` under
-  `test/proofs/` — write properties as Foundry tests with symbolic-bound inputs.
+- hevm (Stage 11, prefix `test_Proof`) and Kontrol (Stage 12, match `Proof*`
+  by default) run the Foundry proof tests under `test/proofs/`. Kontrol
+  1.0.255 has no coverage metric; write the non-vacuity rationale in
+  `review/KONTROL_VACUITY.md`.

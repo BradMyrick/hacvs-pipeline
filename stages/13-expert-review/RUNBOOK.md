@@ -8,7 +8,7 @@
 | Actor | Does |
 |---|---|
 | **Principal Security Engineer (Kodr.pro)** | spec-vs-whitepaper audit, privilege/governance escalation mapping against `ACCESS_CONTROL_MATRIX.json`, economic/oracle/MEV analysis, composability review, final ratification of all suppressions + coverage exceptions |
-| **Frontier Model Auxiliary Triage** (separate OpenCode agent session) | adversarial commit-diff analysis, semantic business-logic checklist vs whitepaper, second pair of eyes on Halmos/Kontrol corpus completeness |
+| **Frontier Model Auxiliary Triage** (separate OpenCode agent session) | adversarial commit-diff analysis, semantic business-logic checklist vs whitepaper, second pair of eyes on hevm/Kontrol corpus completeness |
 | **AiWrangler MCP** (0.1.5) | AST-diff triage assistance + `wrangler_ack` human-review acknowledgements recorded in `review/aiwrangler-acks.json` |
 
 ## Deliverables (runner-validated)

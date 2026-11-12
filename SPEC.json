@@ -3,7 +3,7 @@
   "version": "v0.1.0",
   "target_runtime": "EVM",
   "execution_model": "Fail-Closed Gated Pipeline with Dual-Cadence Tiers, Binary Gate Verdicts, and Expert-in-the-Loop Attestation",
-  "official_description": "Kodr.pro High-Assurance Contract Verification & Security Pipeline (v0.1.0) is a fail-closed, dual-cadence verification system for EVM smart contracts. It enforces hermetic, fully pinned builds (Docker digest-pinned toolchain) and runs every stage under a binary GO/NO-GO gate. On every pull request it performs supply-chain and SBOM checks, deterministic compilation with bytecode size limits, static analysis with governed suppressions, event-emission and indexing verification, storage-layout and upgrade-safety analysis (including Diamond/ERC-2535), ERC standard conformance, and unit, differential, and mainnet-fork testing at >=95% coverage. On the release gate it adds an exhaustive access-control matrix, mutation testing (>=90% kill rate), multi-engine stateful fuzzing with cross-contract reentrancy handlers, source- and bytecode-level symbolic execution with dual bounded model checking (solc SMTChecker and hevm), EVM-level formal theorem proving via Kontrol (KEVM/K Framework) with coverage-enforced non-vacuity, and a signed expert threat-model and specification review. The final stage cryptographically attests the entire evidence bundle.",
+  "official_description": "Kodr.pro High-Assurance Contract Verification & Security Pipeline (v0.1.0) is a fail-closed, dual-cadence verification system for EVM smart contracts. It enforces hermetic, fully pinned builds (Docker digest-pinned toolchain) and runs every stage under a binary GO/NO-GO gate. On every pull request it performs supply-chain and SBOM checks, deterministic compilation with bytecode size limits, static analysis with governed suppressions, event-emission and indexing verification, storage-layout and upgrade-safety analysis (including Diamond/ERC-2535), ERC standard conformance, and unit, differential, and mainnet-fork testing at >=95% coverage. On the release gate it adds an exhaustive access-control matrix, mutation testing (>=90% kill rate), multi-engine stateful fuzzing with cross-contract reentrancy handlers, source- and bytecode-level symbolic execution with dual bounded model checking (solc SMTChecker and hevm), EVM-level formal theorem proving via Kontrol (KEVM/K Framework) whose non-vacuity check is a written per-proof rationale rather than a coverage metric (Kontrol 1.0.255 reports none), and a signed expert threat-model and specification review. The final stage cryptographically attests the entire evidence bundle.",
   "capabilities": "Reproducible builds, dependency hygiene, comprehensive static and dynamic analysis, formal verification of specified properties (bounded model checking and EVM-level theorem proving), upgrade and access-control safety, standards compliance, and cryptographically signed provenance.",
   "security_level": "Among the strongest practical pre-deployment assurance processes currently achievable with open tooling. It provides high confidence that the code matches its stated invariants, access controls, and specifications, subject to the completeness of those specifications and the quality of the expert review. It does not eliminate residual risk from incomplete threat models or novel economic attacks.",
   "cadences": {
@@ -561,25 +561,25 @@
       "order": 12,
       "stage": "evm_level_theorem_proving",
       "cadence": "release_gate_tier",
-      "objective": "Formally prove Foundry-test-expressed properties at the EVM bytecode level using the K Framework (KEVM), with coverage-enforced non-vacuity.",
+      "objective": "Formally prove matched Foundry tests at the EVM bytecode level with Kontrol (KEVM). Pinned Kontrol 1.0.255 has no proof-coverage metric; non-vacuity is a written rationale in review/KONTROL_VACUITY.md.",
       "software": [
         {
           "name": "Kontrol (Runtime Verification)",
-          "runtime": "Pinned Docker digest (KEVM / K Framework)",
+          "runtime": "Pinned Docker digest (KEVM / K Framework), image tag 1.0.255",
           "components": [
             "kontrol build",
             "kontrol prove --match-test",
-            "kontrol view-coverage"
+            "kontrol list"
           ],
-          "purpose": "Compile the Foundry test suite to KEVM and prove state-transition and invariant properties for all symbolic input states at the bytecode level."
+          "purpose": "Compile the matched Foundry tests to KEVM and prove them at the bytecode level. This version has no coverage subcommand; kontrol list is an inventory only."
         }
       ],
       "requirements": {
         "spec_verification": [
-          "State transition invariants across all possible inputs and system states, expressed as Foundry tests and proven at the bytecode level",
-          "Ghost variable inductive proofs for loop iterations and cross-contract callbacks",
-          "Non-vacuity enforced via node/rule coverage: every proven rule must exercise non-trivial branch coverage, with documented rationale that symbolic variables are genuinely unconstrained",
-          "Scribble-instrumented invariants from Stage 3 are included in the proof corpus where applicable"
+          "Matched Foundry tests (default match Proof*) are proved with kontrol prove. The gate fails if no proof ran or any proof failed",
+          "Kontrol 1.0.255 writes no coverage percentage. The runner stores coverage_pct as null. kontrol_coverage_min_pct is recorded and not applied",
+          "review/KONTROL_VACUITY.md must exist, contain the text 'coverage: tool-unavailable', and include every name in kontrol-proofs.json passed and failed. Those names are the --match-test patterns, not a parsed list of test functions. The gate does not verify a signature on that file",
+          "Stage 11 hevm proves Foundry tests prefixed test_Proof under test/proofs/. Stage 12 does not re-check that result. Stage 13 signs MANUAL_REVIEW_SIGNOFF.md, not the vacuity file"
         ],
         "artifacts_output": [
           "artifacts/kontrol-proofs.json",
@@ -588,7 +588,7 @@
       },
       "gate": {
         "decision": "GO_NO_GO",
-        "criteria": "Zero failed Kontrol proofs; coverage thresholds met on all proven rules; zero undocumented vacuous proofs."
+        "criteria": "Zero failed Kontrol proofs and at least one proof ran. review/KONTROL_VACUITY.md exists, names every recorded proof, and states that coverage is tool-unavailable. No coverage threshold is applied. The gate does not check a signature on that file."
       }
     },
     {
@@ -613,7 +613,7 @@
           "responsibilities": [
             "Adversarial diff analysis between git commits",
             "Semantic checklist verification of business logic against protocol whitepaper",
-            "Second-pair-of-eyes check on proof-spec completeness (Halmos/Kontrol corpus) and test edge cases"
+            "Second-pair-of-eyes check on proof-spec completeness (hevm/Kontrol corpus) and test edge cases"
           ]
         }
       ],

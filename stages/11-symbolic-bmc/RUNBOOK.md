@@ -14,4 +14,4 @@
 Reachable `assert(false)`, arithmetic overflow/underflow in assembly/`unchecked` blocks, taint confirmation that sensitive storage slots cannot be overwritten by arbitrary call inputs.
 
 ## Gate evaluation
-`gate.py` requires: zero SMT counterexamples, zero halmos failures + ≥1 proof, zero unmitigated mythril high/critical.
+`gate.py` requires: zero SMT counterexamples, zero hevm failures and at least one passing hevm proof, zero unmitigated mythril high/critical.

@@ -99,7 +99,7 @@
       "stage": "symbolic_execution_and_bounded_model_checking",
       "cadence": "release_gate_tier",
       "decision": "GO_NO_GO",
-      "criteria": "All bounded paths proven safe; zero unmitigated bytecode vulnerabilities reported by Mythril/Halmos.",
+      "criteria": "All bounded paths proven safe; zero unmitigated bytecode vulnerabilities reported by Mythril/hevm.",
       "artifacts_expected": []
     },
     {
@@ -107,7 +107,7 @@
       "stage": "evm_level_theorem_proving",
       "cadence": "release_gate_tier",
       "decision": "GO_NO_GO",
-      "criteria": "Zero failed Kontrol proofs; coverage thresholds met on all proven rules; zero undocumented vacuous proofs.",
+      "criteria": "Zero failed Kontrol proofs and at least one proof ran. review/KONTROL_VACUITY.md exists, names every recorded proof, and states that coverage is tool-unavailable. No coverage threshold is applied. The gate does not check a signature on that file.",
       "artifacts_expected": [
         "artifacts/kontrol-proofs.json",
         "artifacts/kontrol-coverage.json"

@@ -33,8 +33,14 @@ Ground truth is `SPEC.json` in the workstation repo (default
 | Release gate | 8 access matrix · 9 mutation (≥90% kill) · 10 stateful fuzzing (forge+echidna+medusa) · 11 symbolic/BMC (SMTChecker+hevm+Mythril) · 12 Kontrol EVM theorem proving · 13 expert review (HUMAN) · 14 attestation & bundle | release |
 
 Stage 11/12 note (v0.1.0): Certora is **not** used. hevm is the primary
-source-level BMC engine; Kontrol (KEVM/K Framework, docker-digest-pinned)
-proves Foundry tests at the bytecode level with coverage-enforced non-vacuity.
+source-level BMC engine and proves the Foundry proof tests (`test_Proof`
+prefix). Kontrol (KEVM/K Framework, docker-digest-pinned 1.0.255) proves the
+matched Foundry tests at the bytecode level. That Kontrol version has no
+proof-coverage metric. Non-vacuity is a written rationale in
+`review/KONTROL_VACUITY.md`: the stage 12 gate fails if the file is missing,
+does not contain `coverage: tool-unavailable`, or does not name every recorded
+proof (the `--match-test` patterns). It does not check a signature on that
+file. Stage 13 signs `MANUAL_REVIEW_SIGNOFF.md`, not the vacuity file.
 
 ### 3. Operational Rules
 
@@ -91,8 +97,9 @@ laptop:  git pull && hacvsp status --engagement <slug>
 `proxy_architectures` (UUPS/Transparent/Beacon/Diamond/none) drives Stage 5;
 `erc_standards` (or explicit `["NONE"]`) drives Stage 6; `core_contracts`
 drives Stage 9 triage; `fuzz_engines` + `echidna_contract` drive Stage 10;
-`kontrol_match` + `kontrol_coverage_min_pct` drive Stage 12. Empty lists
-fail-closed at intake.
+`kontrol_match` selects the Stage 12 proofs (default `Proof*`).
+`kontrol_coverage_min_pct` is recorded and not applied: Kontrol 1.0.255 writes
+no coverage percentage. Empty lists fail-closed at intake.
 
 ### 7. Key Files
 
